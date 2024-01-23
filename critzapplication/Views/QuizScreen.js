@@ -11,7 +11,19 @@ const QuizScreen = ({ navigation }) => {
   const [timerColor, setTimerColor] = useState('black');
   const [isAnswerLocked, setIsAnswerLocked] = useState(false);
 
+  const [shuffledAnswers, setShuffledAnswers] = useState([]);
+
   const countdownRef = useRef(null);
+
+  useEffect(() => {
+    if (questions[currentQuestionIndex]) {
+      const allAnswers = [
+        ...questions[currentQuestionIndex]?.incorrect_answers,
+        questions[currentQuestionIndex]?.correct_answer,
+      ];
+      setShuffledAnswers(shuffleArray(allAnswers));
+    }
+  }, [questions, currentQuestionIndex]);
 
   useEffect(() => {
     fetchQuestions();
@@ -88,12 +100,14 @@ const QuizScreen = ({ navigation }) => {
     }
   };
 
-  const allAnswers = questions[currentQuestionIndex]
-    ? shuffleArray([
-        ...questions[currentQuestionIndex]?.incorrect_answers,
-        questions[currentQuestionIndex]?.correct_answer,
-      ])
-    : [];
+  const shuffleArray = (array) => {
+    // Fisher-Yates shuffle algorithm
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  };
 
   return (
     <View>
@@ -102,7 +116,7 @@ const QuizScreen = ({ navigation }) => {
       </Text>
       <Text>{questions[currentQuestionIndex]?.question}</Text>
 
-      {allAnswers.map((answer, index) => (
+      {shuffledAnswers.map((answer, index) => (
         <TouchableOpacity
           key={index}
           style={{
