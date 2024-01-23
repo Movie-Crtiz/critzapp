@@ -9,7 +9,7 @@ const ResultScreen = ({ route, navigation }) => {
     // Save the score to MongoDB (implement MongoDB integration here)
 
     // Navigate back to the Quiz screen to start a new quiz
-    navigation.navigate('Quiz');
+    navigation.navigate('Home');
   };
 
   return (

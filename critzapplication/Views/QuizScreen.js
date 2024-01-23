@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Button, RadioGroup, RadioButton } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 
 const QuizScreen = ({ navigation }) => {
@@ -34,7 +34,7 @@ const QuizScreen = ({ navigation }) => {
         setIsAnswerLocked(false);
         setTimerColor('black');
         handleNextQuestion();
-      }, 3000);
+      }, 1000);
 
       return () => clearTimeout(timeoutId);
     }
@@ -95,17 +95,23 @@ const QuizScreen = ({ navigation }) => {
       </Text>
       <Text>{questions[currentQuestionIndex]?.question}</Text>
 
-      <RadioGroup
-        style={{ flexDirection: 'column' }}
-        selectedIndex={selectedAnswer}
-        onValueChange={(value) => handleAnswerSelection(value)}
-      >
-        {questions[currentQuestionIndex]?.incorrect_answers.map((answer, index) => (
-          <RadioButton key={index} value={answer}>
-            <Text>{answer}</Text>
-          </RadioButton>
-        ))}
-      </RadioGroup>
+      {questions[currentQuestionIndex]?.incorrect_answers.map((answer, index) => (
+        <TouchableOpacity
+          key={index}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginVertical: 8,
+            backgroundColor: selectedAnswer === answer ? 'blue' : 'white',
+            padding: 8,
+            borderRadius: 5,
+          }}
+          onPress={() => handleAnswerSelection(answer)}
+          disabled={isAnswerLocked}
+        >
+          <Text style={{ color: selectedAnswer === answer ? 'white' : 'black' }}>{answer}</Text>
+        </TouchableOpacity>
+      ))}
 
       <Text style={{ color: timerColor }}>Time Left: {countdown}s</Text>
     </View>
