@@ -88,6 +88,13 @@ const QuizScreen = ({ navigation }) => {
     }
   };
 
+  const allAnswers = questions[currentQuestionIndex]
+    ? [
+        ...questions[currentQuestionIndex]?.incorrect_answers,
+        questions[currentQuestionIndex]?.correct_answer,
+      ]
+    : [];
+
   return (
     <View>
       <Text>
@@ -95,14 +102,18 @@ const QuizScreen = ({ navigation }) => {
       </Text>
       <Text>{questions[currentQuestionIndex]?.question}</Text>
 
-      {questions[currentQuestionIndex]?.incorrect_answers.map((answer, index) => (
+      {allAnswers.map((answer, index) => (
         <TouchableOpacity
           key={index}
           style={{
             flexDirection: 'row',
             alignItems: 'center',
             marginVertical: 8,
-            backgroundColor: selectedAnswer === answer ? 'blue' : 'white',
+            backgroundColor: selectedAnswer === answer
+              ? (answer === questions[currentQuestionIndex]?.correct_answer
+                ? 'green'
+                : 'red')
+              : 'white',
             padding: 8,
             borderRadius: 5,
           }}
