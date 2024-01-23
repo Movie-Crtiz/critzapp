@@ -4,9 +4,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import {UserProvider} from './Views/userContext'
 import QuizScreen from './Views/QuizScreen';
 import ResultScreen from './Views/ResultScreen';
-import HomeScreen from './Views/HomeScreen';
-import LoginScreen from './Views/LoginScreen';
-
+import LoginScreen from './Views/loginScreen';
+import HomeScreen from './Views/homeScreen';
 const Stack = createStackNavigator();
 
 const App = () => {

@@ -3,7 +3,7 @@ import { View, Text, Button, TextInput, StyleSheet } from 'react-native';
 import axios from 'axios';
 import { useUser } from './userContext';
 
-const loginScreen = ({ route, navigation }) => {
+const loginScreen1 = ({ route, navigation }) => {
   const { userData, login } = useUser();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -98,4 +98,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default loginScreen;
+export default loginScreen1;

@@ -89,10 +89,10 @@ const QuizScreen = ({ navigation }) => {
   };
 
   const allAnswers = questions[currentQuestionIndex]
-    ? [
+    ? shuffleArray([
         ...questions[currentQuestionIndex]?.incorrect_answers,
         questions[currentQuestionIndex]?.correct_answer,
-      ]
+      ])
     : [];
 
   return (

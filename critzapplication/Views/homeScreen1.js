@@ -1,8 +1,7 @@
 import React from 'react';
 import { View, Text, Button } from 'react-native';
 
-const LeadershipBoardScreen = ({ route, navigation }) => {
-  const { score } = route.params;
+const homeScreen1 = ({ route, navigation }) => {
 
   const handleNavigateQuiz = () => {
     // Save the score to MongoDB (implement MongoDB integration here)
@@ -18,4 +17,4 @@ const LeadershipBoardScreen = ({ route, navigation }) => {
   );
 };
 
-export default LeadershipBoardScreen;
+export default homeScreen1;
