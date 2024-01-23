@@ -1,10 +1,11 @@
+
 import React from 'react';
 import { View, Text, Button } from 'react-native';
 
-const LeadershipBoardScreen = ({ route, navigation }) => {
+const ResultScreen = ({ route, navigation }) => {
   const { score } = route.params;
 
-  const handleNavigateQuiz = () => {
+  const handleFinishQuiz = () => {
     // Save the score to MongoDB (implement MongoDB integration here)
 
     // Navigate back to the Quiz screen to start a new quiz
@@ -13,9 +14,10 @@ const LeadershipBoardScreen = ({ route, navigation }) => {
 
   return (
     <View>
-      <Button title="Quiz" onPress={handleNavigateQuiz} />
+      <Text>Your Score: {score}/10</Text>
+      <Button title="Finish Quiz" onPress={handleFinishQuiz} />
     </View>
   );
 };
 
-export default LeadershipBoardScreen;
+export default ResultScreen;
