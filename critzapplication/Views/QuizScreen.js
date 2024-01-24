@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity,ActivityIndicator ,Alert } from 'react-native';
 import axios from 'axios';
+import he from 'he';
 
 const QuizScreen = ({ navigation }) => {
   const [questions, setQuestions] = useState([]);
@@ -10,7 +12,7 @@ const QuizScreen = ({ navigation }) => {
   const [countdown, setCountdown] = useState(20);
   const [timerColor, setTimerColor] = useState('black');
   const [isAnswerLocked, setIsAnswerLocked] = useState(false);
-
+  const [loading, setLoading] = useState(true);
   const [shuffledAnswers, setShuffledAnswers] = useState([]);
 
   const countdownRef = useRef(null);
@@ -41,7 +43,7 @@ const QuizScreen = ({ navigation }) => {
 
   useEffect(() => {
     if (isAnswerLocked) {
-      // Lock the answer selection for 3 seconds
+      // Lock the answer selection for 1 seconds
       const timeoutId = setTimeout(() => {
         setIsAnswerLocked(false);
         setTimerColor('black');
@@ -57,11 +59,27 @@ const QuizScreen = ({ navigation }) => {
       const response = await axios.get(
         'https://opentdb.com/api.php?amount=10&category=11&difficulty=medium&type=multiple'
       );
-      setQuestions(response.data.results);
+      setLoading(false)
+
+            // Decode HTML entities in questions and answers
+            const decodedQuestions = response.data.results.map((question) => ({
+              ...question,
+              question: he.decode(question.question),
+              incorrect_answers: question.incorrect_answers.map((answer) => he.decode(answer)),
+              correct_answer: he.decode(question.correct_answer),
+            }));
+
+      setQuestions(decodedQuestions);
       startCountdown();
     } catch (error) {
-      console.error('Error fetching questions:', error);
+      console.error('Error fetching questions111:', error);
+      // showAlert('Error','Error fetching questions');
+      fetchQuestions();
     }
+  };
+
+  const showAlert = (title, message) => {
+    Alert.alert(title, message, [{ text: 'Retry', onPress: () => fetchQuestions() }], { cancelable: false });
   };
 
   const startCountdown = () => {
@@ -109,12 +127,21 @@ const QuizScreen = ({ navigation }) => {
     return array;
   };
 
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="blue" />
+      </View>
+    );
+  }
+
   return (
     <View>
       <Text>
         Question {currentQuestionIndex + 1} of {questions.length}
       </Text>
-      <Text>{questions[currentQuestionIndex]?.question}</Text>
+      <Text>{he.decode(questions[currentQuestionIndex]?.question || '')}</Text>
+
 
       {shuffledAnswers.map((answer, index) => (
         <TouchableOpacity
@@ -134,7 +161,7 @@ const QuizScreen = ({ navigation }) => {
           onPress={() => handleAnswerSelection(answer)}
           disabled={isAnswerLocked}
         >
-          <Text style={{ color: selectedAnswer === answer ? 'white' : 'black' }}>{answer}</Text>
+          <Text style={{ color: selectedAnswer === answer ? 'white' : 'black' }}> {he.decode(answer || '')}</Text>
         </TouchableOpacity>
       ))}
 
@@ -142,5 +169,13 @@ const QuizScreen = ({ navigation }) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 export default QuizScreen;
