@@ -1,8 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet } from 'react-native';
-import { View, Text, TouchableOpacity,ActivityIndicator ,Alert } from 'react-native';
-import axios from 'axios';
-import he from 'he';
+import React, { useState, useEffect, useRef, Component } from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+  Alert,
+} from "react-native";
+import axios from "axios";
+import he from "he";
+
+import * as Progress from "react-native-progress";
 
 const QuizScreen = ({ navigation }) => {
   const [questions, setQuestions] = useState([]);
@@ -10,10 +18,12 @@ const QuizScreen = ({ navigation }) => {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [score, setScore] = useState(0);
   const [countdown, setCountdown] = useState(20);
-  const [timerColor, setTimerColor] = useState('black');
+  const [timerColor, setTimerColor] = useState("red");
   const [isAnswerLocked, setIsAnswerLocked] = useState(false);
   const [loading, setLoading] = useState(true);
   const [shuffledAnswers, setShuffledAnswers] = useState([]);
+
+  const [totalQuestions, setTotalQuestions] = useState(0);
 
   const countdownRef = useRef(null);
 
@@ -32,8 +42,13 @@ const QuizScreen = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
+    setTimerColor("white"); // Initialize the timer color
+    startCountdown();
+  }, [questions]);
+
+  useEffect(() => {
     if (countdown === 5) {
-      setTimerColor('red');
+      setTimerColor("red");
     }
 
     if (countdown === 0) {
@@ -46,7 +61,7 @@ const QuizScreen = ({ navigation }) => {
       // Lock the answer selection for 1 seconds
       const timeoutId = setTimeout(() => {
         setIsAnswerLocked(false);
-        setTimerColor('black');
+        setTimerColor("black");
         handleNextQuestion();
       }, 1000);
 
@@ -57,29 +72,37 @@ const QuizScreen = ({ navigation }) => {
   const fetchQuestions = async () => {
     try {
       const response = await axios.get(
-        'https://opentdb.com/api.php?amount=10&category=11&difficulty=medium&type=multiple'
+        "https://opentdb.com/api.php?amount=10&category=11&difficulty=medium&type=multiple"
       );
-      setLoading(false)
+      setLoading(false);
 
-            // Decode HTML entities in questions and answers
-            const decodedQuestions = response.data.results.map((question) => ({
-              ...question,
-              question: he.decode(question.question),
-              incorrect_answers: question.incorrect_answers.map((answer) => he.decode(answer)),
-              correct_answer: he.decode(question.correct_answer),
-            }));
+      // Decode HTML entities in questions and answers
+      const decodedQuestions = response.data.results.map((question) => ({
+        ...question,
+        question: he.decode(question.question),
+        incorrect_answers: question.incorrect_answers.map((answer) =>
+          he.decode(answer)
+        ),
+        correct_answer: he.decode(question.correct_answer),
+      }));
 
       setQuestions(decodedQuestions);
+      setTotalQuestions(decodedQuestions.length);
       startCountdown();
     } catch (error) {
-      console.error('Error fetching questions111:', error);
+      console.error("Error fetching questions111:", error);
       // showAlert('Error','Error fetching questions');
       fetchQuestions();
     }
   };
 
   const showAlert = (title, message) => {
-    Alert.alert(title, message, [{ text: 'Retry', onPress: () => fetchQuestions() }], { cancelable: false });
+    Alert.alert(
+      title,
+      message,
+      [{ text: "Retry", onPress: () => fetchQuestions() }],
+      { cancelable: false }
+    );
   };
 
   const startCountdown = () => {
@@ -91,7 +114,7 @@ const QuizScreen = ({ navigation }) => {
   const resetCountdown = () => {
     clearInterval(countdownRef.current);
     setCountdown(20);
-    setTimerColor('black');
+    setTimerColor("white");
     startCountdown();
   };
 
@@ -106,7 +129,7 @@ const QuizScreen = ({ navigation }) => {
       resetCountdown();
     } else {
       clearInterval(countdownRef.current);
-      navigation.navigate('Result', { score });
+      navigation.navigate("Result", { score });
     }
   };
 
@@ -136,36 +159,77 @@ const QuizScreen = ({ navigation }) => {
   }
 
   return (
-    <View>
-      <Text>
-        Question {currentQuestionIndex + 1} of {questions.length}
+    <View style={styles.contentContainer}>
+      <Text
+        style={{
+          color: timerColor,
+          textAlign: "left",
+          alignSelf: "flex-start",
+          paddingLeft: 20,
+          paddingBottom: 30,
+        }}
+      >
+        Time Left: {countdown}s
       </Text>
-      <Text>{he.decode(questions[currentQuestionIndex]?.question || '')}</Text>
-
-
+      <View style={styles.headerContainer}>
+        {totalQuestions > 0 && (
+          <Progress.Bar
+            progress={currentQuestionIndex / totalQuestions}
+            width={300}
+            height={10}
+            color="#31CD63"
+            unfilledColor="white"
+          />
+        )}
+        <Text style={{ color: "#757575", marginLeft: 10 }}>
+          {currentQuestionIndex + 1}/{totalQuestions}
+        </Text>
+      </View>
+      <Text
+        style={{
+          color: "white",
+          fontWeight: "bold",
+          fontSize: 20,
+          paddingTop: 40,
+          paddingBottom: 80,
+        }}
+      >
+        {he.decode(questions[currentQuestionIndex]?.question || "")}
+      </Text>
       {shuffledAnswers.map((answer, index) => (
         <TouchableOpacity
           key={index}
           style={{
-            flexDirection: 'row',
-            alignItems: 'center',
+            flexDirection: "row",
             marginVertical: 8,
-            backgroundColor: selectedAnswer === answer
-              ? (answer === questions[currentQuestionIndex]?.correct_answer
-                ? 'green'
-                : 'red')
-              : 'white',
+            backgroundColor:
+              selectedAnswer === answer
+                ? answer === questions[currentQuestionIndex]?.correct_answer
+                  ? "green"
+                  : "red"
+                : "#F2BDA1",
             padding: 8,
             borderRadius: 5,
+            width: 300,
+            height: 50,
+            alignItems: "center",
+            justifyContent: "center",
           }}
           onPress={() => handleAnswerSelection(answer)}
           disabled={isAnswerLocked}
         >
-          <Text style={{ color: selectedAnswer === answer ? 'white' : 'black' }}> {he.decode(answer || '')}</Text>
+          <Text
+            style={{
+              color: selectedAnswer === answer ? "white" : "black",
+              fontWeight: "bold",
+              fontSize: 15,
+            }}
+          >
+            {" "}
+            {he.decode(answer || "")}
+          </Text>
         </TouchableOpacity>
       ))}
-
-      <Text style={{ color: timerColor }}>Time Left: {countdown}s</Text>
     </View>
   );
 };
@@ -173,8 +237,19 @@ const QuizScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#423378",
+    alignItems: "center",
+  },
+  contentContainer: {
+    flex: 1,
+    backgroundColor: "#423378",
+    alignItems: "center",
+    paddingTop: 80,
+  },
+  headerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
   },
 });
 
