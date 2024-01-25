@@ -104,9 +104,9 @@ const mainScreen = () => {
     <View style={styles.container}>
       <LinearGradient colors={[primaryColor, primaryColor]} style={styles.gradient}>
         <View style={styles.headerButtons}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          {/* <TouchableOpacity onPress={() => navigation.goBack()}>
             <FontAwesome name="arrow-left" style={styles.headerIcon} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity onPress={() => navigation.navigate('Leaderboard')}>
             <FontAwesome name="trophy" style={styles.headerIcon} />
           </TouchableOpacity>
