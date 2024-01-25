@@ -7,6 +7,10 @@ import { useNavigation } from '@react-navigation/native';
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 
+import { useUser } from './userContext';
+import { API_BASE_URL } from '../config';
+import axios from 'axios';
+
 const firebaseConfig = {
   apiKey: "AIzaSyBHSlMBBDWXWS2LzWcgSbvelq4wFPX-p6s",
   authDomain: "critzapplication.firebaseapp.com",
@@ -32,6 +36,7 @@ export default function signUpScreen() {
   const [signUpPassword, setSignUpPassword] = useState('');
   const [authMessage, setAuthMessage] = useState('');
 
+  const { userData, login } = useUser();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -55,25 +60,56 @@ export default function signUpScreen() {
       console.log("password:", signUpPassword);
     
       // Send member data to the server
-      await fetch('http://localhost:3000/members', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body:{
-          firstName: signUpFirstName,
-          lastName: signUpLastName,
-          email: signUpEmail,
-          password: signUpPassword,
-        },
-      });
+    //   await fetch('http://localhost:3000/members', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body:{
+    //       firstName: signUpFirstName,
+    //       lastName: signUpLastName,
+    //       email: signUpEmail,
+    //       password: signUpPassword,
+    //     },
+    //   });
+
+      const userObj = {
+        firstName: signUpFirstName,
+        lastName: signUpLastName,
+        email: signUpEmail,
+        password: signUpPassword,
+      }
+
+      await axios.post(`${API_BASE_URL}/members/` , userObj);
   
       console.log("Server: Sign-up request sent successfully.");
-  
+      getUserData();
       setAuthMessage('Sign-up successful!');
     } catch (error) {
       console.error('Error signing up with email and password:', error);
       setAuthMessage('Failed to sign up. Please check your credentials.');
+    }
+  };
+
+  const getUserData = async () => {
+    try {
+      console.log(signUpEmail);
+      const response = await axios.get(`${API_BASE_URL}/members/${signUpEmail}`);
+      console.log('response :' ,response);
+      console.log('Login successfully: ', response.data);
+      const userData = response.data;
+      login(userData);
+      console.log('userData :' ,userData);
+      navigation.navigate('MainScreen');
+
+    } catch (error) {
+      if (error.response) {
+        setAuthMessage(error.response.data.message);
+        console.log('Login Error: ', error.response.data.message);
+      } else {
+        setAuthMessage('An unexpected error occurred');
+        console.log('An unexpected error occurred');
+      }
     }
   };
 

@@ -127,7 +127,7 @@ const QuizScreen = ({ navigation }) => {
 
   const handleNextQuestion = () => {
     if (selectedAnswer === questions[currentQuestionIndex].correctAnswer) {
-      setScore(score + 1);
+      setScore(score + 10);
     }
 
     if (currentQuestionIndex < questions.length - 1) {

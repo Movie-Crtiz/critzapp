@@ -4,6 +4,8 @@ import { useUser } from './userContext';
 import {Image, TouchableOpacity} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import { API_BASE_URL } from '../config';
 
 const ResultScreen = ({ route, navigation }) => {
   const { score } = route.params;
@@ -68,23 +70,20 @@ const ResultScreen = ({ route, navigation }) => {
 
   const handleFinishQuiz = async () => {
 
-    navigation.navigate('MainScreen');
-    // try {
-  //  const currentDate = new Date();
-    //   const currentUser = userData?._id;
-    //   const scoreData = {
-    //     userID: currentUser,
-    //     date: currentDate.toISOString(),
-    //     score: score,
-    //   };
+    try {
+      const currentUser = userData?._id;
+      const scoreData = {
+        playerId: currentUser,
+        score: score,
+      };
   
-    //   response = await axios.post(`${API_BASE_URL}/score/add`, scoreData);
-    //   console.log(response.data);
-    //   navigation.navigate('MainScreen');
-    // } catch (error) {
-    //   console.error('Error saving task:', error);
-    //   Alert.alert('Error', 'An unexpected error occurred.');
-    // }
+      response = await axios.post(`${API_BASE_URL}/scores`, scoreData);
+      console.log(response.data);
+       navigation.navigate('MainScreen');
+    } catch (error) {
+      console.error('Error saving score:', error);
+      Alert.alert('Error', 'An unexpected error occurred.');
+    }
   };
 
   return (
@@ -94,7 +93,7 @@ const ResultScreen = ({ route, navigation }) => {
         
         <Image source={require('../assets/trophy.png')} style={styles.Image} />
 
-        <Text style={styles.scoreText}>Your Score: {score}/10</Text>
+        <Text style={styles.scoreText}>Your Score: {score}/100</Text>
         <TouchableOpacity
           style={styles.buttonsContainer}
           onPress={() => handleFinishQuiz()}
