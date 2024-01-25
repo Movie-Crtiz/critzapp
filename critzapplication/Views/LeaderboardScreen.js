@@ -78,7 +78,7 @@ const LeaderboardScreen = () => {
     }, [scores]);
 
     useEffect(() => {
-        const currentUserIndex = sortedScores.findIndex((item) => item.userID === '5'); // Replace '1' with the actual current user ID
+        const currentUserIndex = sortedScores.findIndex((item) => item.userID === '5'); // Replace '5' with userData?._id
         setCurrentUserRank(currentUserIndex !== -1 ? sortedScores[currentUserIndex].placeCounter : null);
     }, [sortedScores,currentUserRank]);
 

@@ -70,16 +70,17 @@ const ResultScreen = ({ route, navigation }) => {
 
     navigation.navigate('MainScreen');
     // try {
-  
+  //  const currentDate = new Date();
     //   const currentUser = userData?._id;
     //   const scoreData = {
     //     userID: currentUser,
-    //     date: '2022-01-01',
-    //     score: 120,
+    //     date: currentDate.toISOString(),
+    //     score: score,
     //   };
   
     //   response = await axios.post(`${API_BASE_URL}/score/add`, scoreData);
     //   console.log(response.data);
+    //   navigation.navigate('MainScreen');
     // } catch (error) {
     //   console.error('Error saving task:', error);
     //   Alert.alert('Error', 'An unexpected error occurred.');

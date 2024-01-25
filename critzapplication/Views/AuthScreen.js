@@ -28,6 +28,8 @@ import { Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import { useUser } from './userContext';
+import { API_BASE_URL } from '../config';
+import axios from 'axios';
 //import Quiz from './Quiz';
 
 const firebaseConfig = {
@@ -204,8 +206,9 @@ const AuthScreen = () => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         const uid = user.uid;
+        getUserData();
         setAuthMessage("Sign-in successful!");
-        navigation.navigate('MainScreen');
+        console.log("Sign-in successful!");
       } else {
       }
     });
@@ -215,6 +218,7 @@ const AuthScreen = () => {
   const handleSignInWithEmailAndPassword = async () => {
     try {
       await signInWithEmailAndPassword(auth, signInEmail, signInPassword);
+      await getUserData();
       console.log("Sign-in successful!");
     } catch (error) {
       console.error("Error signing in with email and password:", error);
@@ -223,26 +227,27 @@ const AuthScreen = () => {
   };
 
   const getUserData = async () => {
-    navigation.navigate("mainScreen");
-    // try {
-    //   // Replace the following line with your actual login API call
-    //   // const response = await axios.post(`${API_BASE_URL}/users/getUserByEmail`, { signInEmail });
+    try {
+      console.log(signInEmail);
+      const response = await axios.get(`${API_BASE_URL}/members/${signInEmail}`);
+      console.log('response :' ,response);
+      console.log('Login successfully: ', response.data);
+      const userData = response.data;
+      login(userData);
+      console.log('userData :' ,userData);
+      navigation.navigate('MainScreen');
 
-    //   // console.log('Login successfully: ', response.data);
-    //   // const userData = response.data.currentUser;
-    //   // login(userData);
-    //   // navigation.navigate("mainScreen");
-
-    // } catch (error) {
-    //   // if (error.response) {
-    //   //   setError(error.response.data.message);
-    //   //   console.log('Login Error: ', error.response.data.message);
-    //   // } else {
-    //   //   setError('An unexpected error occurred');
-    //   //   console.log('An unexpected error occurred');
-    //   // }
-    // }
+    } catch (error) {
+      if (error.response) {
+        setAuthMessage(error.response.data.message);
+        console.log('Login Error: ', error.response.data.message);
+      } else {
+        setAuthMessage('An unexpected error occurred');
+        console.log('An unexpected error occurred');
+      }
+    }
   };
+
 
   return (
     <LinearGradient
@@ -306,8 +311,8 @@ const AuthScreen = () => {
           onPress={async () => {
             const signInSuccess = await handleSignInWithEmailAndPassword();
             if (signInSuccess) {
-              // navigation.navigate("mainScreen");
               await getUserData();
+              console.log("Sign-in successful!");
             }
           }}
         >
