@@ -27,7 +27,6 @@ import {
 import { Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
-import { useUser } from './userContext';
 //import Quiz from './Quiz';
 
 const firebaseConfig = {
@@ -54,7 +53,6 @@ const AuthScreen = () => {
   // const [signUpEmail, setSignUpEmail] = useState('');
   // const [signUpPassword, setSignUpPassword] = useState('');
   const [authMessage, setAuthMessage] = useState("");
-  const { userData, login } = useUser();
 
   const primaryColor = "#423378"; // Minsk
   const secondaryColor = "#F2BDA1"; // Mandys Pink
@@ -222,28 +220,6 @@ const AuthScreen = () => {
     }
   };
 
-  const getUserData = async () => {
-    navigation.navigate("mainScreen");
-    // try {
-    //   // Replace the following line with your actual login API call
-    //   // const response = await axios.post(`${API_BASE_URL}/users/getUserByEmail`, { signInEmail });
-
-    //   // console.log('Login successfully: ', response.data);
-    //   // const userData = response.data.currentUser;
-    //   // login(userData);
-    //   // navigation.navigate("mainScreen");
-
-    // } catch (error) {
-    //   // if (error.response) {
-    //   //   setError(error.response.data.message);
-    //   //   console.log('Login Error: ', error.response.data.message);
-    //   // } else {
-    //   //   setError('An unexpected error occurred');
-    //   //   console.log('An unexpected error occurred');
-    //   // }
-    // }
-  };
-
   return (
     <LinearGradient
       colors={[primaryColor, secondaryColor]}
@@ -306,8 +282,7 @@ const AuthScreen = () => {
           onPress={async () => {
             const signInSuccess = await handleSignInWithEmailAndPassword();
             if (signInSuccess) {
-              // navigation.navigate("mainScreen");
-              await getUserData();
+              navigation.navigate("mainScreen");
             }
           }}
         >
