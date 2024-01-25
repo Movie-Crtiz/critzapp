@@ -52,8 +52,20 @@ const App = () => {
           <Stack.Screen name="SignUp" component={signUpScreen} />
           <Stack.Screen name="MainScreen" component={mainScreen} />
           <Stack.Screen name="Auth" component={AuthScreen} />
+          <Stack.Screen
+  name="Leaderboard"component={LeaderboardScreen}
+  options={{ headerStyle: {
+      backgroundColor: '#423378', // Change to your desired header color
+    },
+    headerTitleStyle: {
+      color: 'white', // Change to your desired title color
+    },
+    headerTitleAlign: 'center', headerShown: true, headerTintColor: 'white'
+  }}
+/>
+
           {/* <Stack.Screen name="Home" component={HomeScreen} /> */}
-          <Stack.Screen name="Leaderboard" component={LeaderboardScreen} />
+          {/* <Stack.Screen name="Leaderboard" component={LeaderboardScreen} options={{ headerShown: true}} /> */}
           <Stack.Screen
             name="Result"
             component={ResultScreen}

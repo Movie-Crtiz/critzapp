@@ -7,49 +7,49 @@ const dummyData = [
     {
         userID: '1',
         name: 'John ',
-        date: '2022-01-01',
+        username: '@username',
         score: 120,
         iconUrl: '',
     },
     {
         userID: '1',
         name: 'John ',
-        date: '2022-01-09',
+        username: '@username',
         score: 120,
         iconUrl: '',
     },
     {
         userID: '1',
         name: 'John ',
-        date: '2022-01-10',
+        username: '@username',
         score: 100,
         iconUrl: '',
     },
     {
         userID: '2',
         name: 'z Doe',
-        date: '2022-01-02',
+        username: '@username',
         score: 105,
         iconUrl: '',
     },
     {
         userID: '3',
         name: 'Alice ',
-        date: '2022-01-03',
+        username: '@username',
         score: 90,
         iconUrl: '',
     },
     {
         userID: '4',
         name: 'Jane Doe',
-        date: '2022-01-02',
+        username: '@username',
         score: 105,
         iconUrl: '',
     },
     {
         userID: '5',
         name: 'a Smith',
-        date: '2022-01-03',
+        username: '@username',
         score: 105,
         iconUrl: '',
     },
@@ -122,7 +122,7 @@ const LeaderboardScreen = () => {
                 <View style={styles.userInfo}>
                     <View>
                         <Text style={styles.userInfoText}>{item.name}</Text>
-                        <Text style={styles.userInfoText}>{item.date}</Text>
+                        <Text style={styles.userInfoText}>{item.username}</Text>
                     </View>
                     <Text style={styles.userInfoScore}>{item.score}</Text>
                 </View>
