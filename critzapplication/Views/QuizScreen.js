@@ -30,8 +30,8 @@ const QuizScreen = ({ navigation }) => {
   useEffect(() => {
     if (questions[currentQuestionIndex]) {
       const allAnswers = [
-        ...questions[currentQuestionIndex]?.incorrect_answers,
-        questions[currentQuestionIndex]?.correct_answer,
+        ...questions[currentQuestionIndex]?.incorrectAnswers,
+        questions[currentQuestionIndex]?.correctAnswer,
       ];
       setShuffledAnswers(shuffleArray(allAnswers));
     }
@@ -72,18 +72,25 @@ const QuizScreen = ({ navigation }) => {
   const fetchQuestions = async () => {
     try {
       const response = await axios.get(
-        "https://opentdb.com/api.php?amount=10&category=11&difficulty=medium&type=multiple"
+        // "https://opentdb.com/api.php?amount=10&category=11&difficulty=medium&type=multiple"
+        "https://the-trivia-api.com/v2/questions"
       );
       setLoading(false);
-
       // Decode HTML entities in questions and answers
-      const decodedQuestions = response.data.results.map((question) => ({
+      // const decodedQuestions = response.data.map((question) => ({
+      //   ...question,
+      //   question: he.decode(question.question),
+      //   incorrectAnswers: question.incorrectAnswers.map((answer) =>
+      //     he.decode(answer)
+      //   ),
+      //   correctAnswer: he.decode(question.correctAnswer),
+      // }));
+
+      const decodedQuestions = response.data.map((question) => ({
         ...question,
-        question: he.decode(question.question),
-        incorrect_answers: question.incorrect_answers.map((answer) =>
-          he.decode(answer)
-        ),
-        correct_answer: he.decode(question.correct_answer),
+        question: he.decode(question.question.text),
+        incorrectAnswers: question.incorrectAnswers.map((answer) => he.decode(answer)),
+        correctAnswer: he.decode(question.correctAnswer),
       }));
 
       setQuestions(decodedQuestions);
@@ -119,7 +126,7 @@ const QuizScreen = ({ navigation }) => {
   };
 
   const handleNextQuestion = () => {
-    if (selectedAnswer === questions[currentQuestionIndex].correct_answer) {
+    if (selectedAnswer === questions[currentQuestionIndex].correctAnswer) {
       setScore(score + 1);
     }
 
@@ -194,7 +201,8 @@ const QuizScreen = ({ navigation }) => {
           paddingBottom: 80,
         }}
       >
-        {he.decode(questions[currentQuestionIndex]?.question || "")}
+          {/* {he.decode(questions[currentQuestionIndex]?.question || "")} */}
+        {questions[currentQuestionIndex]?.question}
       </Text>
       {shuffledAnswers.map((answer, index) => (
         <TouchableOpacity
@@ -204,7 +212,7 @@ const QuizScreen = ({ navigation }) => {
             marginVertical: 8,
             backgroundColor:
               selectedAnswer === answer
-                ? answer === questions[currentQuestionIndex]?.correct_answer
+                ? answer === questions[currentQuestionIndex]?.correctAnswer
                   ? "green"
                   : "red"
                 : "#F2BDA1",
@@ -226,7 +234,8 @@ const QuizScreen = ({ navigation }) => {
             }}
           >
             {" "}
-            {he.decode(answer || "")}
+            {/* {he.decode(answer || "")} */}
+            {answer}
           </Text>
         </TouchableOpacity>
       ))}

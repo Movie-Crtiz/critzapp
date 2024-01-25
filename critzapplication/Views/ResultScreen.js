@@ -8,7 +8,7 @@ const ResultScreen = ({ route, navigation }) => {
 
   const handleFinishQuiz = async () => {
 
-    navigation.navigate('Home');
+    navigation.navigate('MainScreen');
     // try {
   
     //   const currentUser = userData?._id;
