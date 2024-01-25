@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, Image } from 'react-native';
+import { View, Text, FlatList, Image, StyleSheet } from 'react-native';
 import axios from 'axios';
 import { useUser } from './userContext';
 
@@ -116,19 +116,25 @@ const LeaderboardScreen = () => {
 
     const renderLeaderboardItem = ({ item }) => {
         return (
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 8 }}>
-                <Text>{item.placeCounter}</Text>
-                <Image source={item.iconUrl ? {uri:item.iconUrl} : require('../assets/user.png')} style={{ borderRadius: 50, width: 30, height: 30, marginHorizontal: 8 }} />
-                <Text>{item.name}</Text>
-                <Text>{item.date}</Text>
-                <Text>{item.score}</Text>
+            <View style={styles.leaderboardItem}>
+                <Text style={styles.placeCounter}>{item.placeCounter}</Text>
+                <Image source={item.iconUrl ? { uri: item.iconUrl } : require('../assets/user.png')} style={styles.userIcon} />
+                <View style={styles.userInfo}>
+                    <View>
+                        <Text style={styles.userInfoText}>{item.name}</Text>
+                        <Text style={styles.userInfoText}>{item.date}</Text>
+                    </View>
+                    <Text style={styles.userInfoScore}>{item.score}</Text>
+                </View>
             </View>
         );
     };
+    
 
     return (
-        <View>
-            <Text>{`Your Rank: ${currentUserRank}`}</Text>
+        <View style={styles.container}>
+           
+            <Text style={styles.userRank}>{`Your Rank: ${currentUserRank}`}</Text>
             <FlatList
                 data={sortedScores}
                 keyExtractor={(item) => item.userID}
@@ -137,5 +143,54 @@ const LeaderboardScreen = () => {
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#423378', // Background color for the entire screen
+        padding: 16,
+    },
+    userInfoContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between', // Align items at the ends of the container
+        width: '100%',
+    },
+    leaderboardItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginVertical: 8,
+        borderBottomWidth: 1, // Add a horizontal line between items
+        borderBottomColor: '#B7B3B3', // Set the color of the line
+        paddingBottom: 8, // Add some padding between the line and the next item
+    },
+    placeCounter: {
+        color: '#B7B3B3', // Text color for the place counter
+        marginRight: 8,
+    },
+    userIcon: {
+        borderRadius: 50,
+        width: 30,
+        height: 30,
+        marginHorizontal: 8,
+    },
+    userInfo: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        flex: 1,
+        justifyContent: 'space-between', // Align items at the ends of the container
+    },
+    userInfoText: {
+        color: 'white', // Text color for user information
+        marginBottom: 4, // Add some margin to the bottom
+    },
+    userInfoScore: {
+        color: 'white', // Text color for user score
+    },
+    userRank: {
+        color: 'white', // Text color for user rank
+        marginBottom: 16, // Add some margin between user rank and the list
+    },
+});
+
 
 export default LeaderboardScreen;
