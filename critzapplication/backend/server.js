@@ -30,8 +30,8 @@ db.once("open", () => {
 });
 
 // Routes
-app.use('/members', memberRoutes);
-app.use('/scores', scoreRoutes);
+app.use(memberRoutes);
+app.use(scoreRoutes);
 
 // Default route
 app.get("/", (req, res) => {
