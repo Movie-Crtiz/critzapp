@@ -106,6 +106,9 @@ const LeaderboardScreen = () => {
 
   return (
     <View style={styles.container}>
+    <View style={styles.topImageContainer}>
+        <Image source={require('../assets/crownn.png')} style={styles.smallImage}/>
+    </View>
       <Text style={styles.userRank}>{`Your Rank: ${currentUserRank}`}</Text>
       <FlatList
         data={scoresWithPlaceCounter}
@@ -160,7 +163,15 @@ const styles = StyleSheet.create({
   },
   userRank: {
     color: "white", // Text color for user rank
-    marginBottom: 16, // Add some margin between user rank and the list
+    marginBottom: 12, // Add some margin between user rank and the list
+    alignSelf: 'center',
+    fontWeight: 'bold',
+    fontSize: 30,
+  },
+  smallImage: {
+    width: 100,
+    height:100,
+    alignSelf: 'center',
   },
 });
 

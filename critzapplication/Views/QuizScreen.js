@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Alert,
 } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import axios from "axios";
 import he from "he";
 
@@ -25,6 +26,9 @@ const QuizScreen = ({ navigation }) => {
 
   const [totalQuestions, setTotalQuestions] = useState(0);
 
+  const primaryColor = "#423378"; // Minsk
+  const secondaryColor = "#F2BDA1"; // Mandys Pink
+  const shadowColor = "#C48F7A";
   const countdownRef = useRef(null);
 
   useEffect(() => {
@@ -165,109 +169,113 @@ const QuizScreen = ({ navigation }) => {
     );
   }
 
-return (
-  <View style={styles.contentContainer}>
-    <Text
-      style={{
-        color: timerColor,
-        textAlign: "left",
-        alignSelf: "flex-start",
-        paddingLeft: 20,
-        paddingBottom: 30,
-      }}
+  return (
+    <LinearGradient
+      colors={[secondaryColor, primaryColor, primaryColor]}
+      style={styles.container}
     >
-      Time Left: {countdown}s
-    </Text>
-    <View style={styles.headerContainer}>
-      {totalQuestions > 0 && (
-        <Progress.Bar
-          progress={currentQuestionIndex / totalQuestions}
-          width={300}
-          height={10}
-          color="#31CD63"
-          unfilledColor="white"
-        />
-      )}
-      <Text style={{ color: "#757575", marginLeft: 10 }}>
-        {currentQuestionIndex + 1}/{totalQuestions}
-      </Text>
-    </View>
-    <Text
-      style={{
-        color: "white",
-        fontWeight: "bold",
-        width: '80%',
-        fontSize: 20,
-        paddingTop: 40,
-        paddingBottom: 80,
-        alignSelf: 'center',
-      }}
-    >
-      {questions[currentQuestionIndex]?.question}
-    </Text>
-    {shuffledAnswers.map((answer, index) => (
-      <TouchableOpacity
-        key={index}
+      <Text
         style={{
-          flexDirection: "row",
-          marginVertical: 8,
-          backgroundColor:
-            selectedAnswer === answer
-              ? answer === questions[currentQuestionIndex]?.correctAnswer
-                ? "green"
-                : "red"
-              : "white", //"#F2BDA1"
-          padding: 8,
-          borderRadius: 10,
-          width: '80%',
-          height: 50,
-          alignItems: "center",
-          justifyContent: "left",
-          overflow: 'hidden',
+          color: timerColor,
+          textAlign: "left",
+          alignSelf: "flex-start",
+          paddingLeft: 20,
+          paddingBottom: 30,
         }}
-        onPress={() => handleAnswerSelection(answer)}
-        disabled={isAnswerLocked}
       >
-        <View
+        Time Left: {countdown}s
+      </Text>
+      <View style={styles.headerContainer}>
+        {totalQuestions > 0 && (
+          <Progress.Bar
+            progress={currentQuestionIndex / totalQuestions}
+            width={300}
+            height={10}
+            color="#31CD63"
+            unfilledColor="white"
+          />
+        )}
+        <Text style={{ color: "#757575", marginLeft: 10 }}>
+          {currentQuestionIndex + 1}/{totalQuestions}
+        </Text>
+      </View>
+      <Text
+        style={{
+          color: "white",
+          fontWeight: "bold",
+          width: "80%",
+          fontSize: 20,
+          paddingTop: 40,
+          paddingBottom: 80,
+          alignSelf: "center",
+        }}
+      >
+        {questions[currentQuestionIndex]?.question}
+      </Text>
+      {shuffledAnswers.map((answer, index) => (
+        <TouchableOpacity
+          key={index}
           style={{
-            backgroundColor:  selectedAnswer === answer
-            ?  "white"
-            : "#F2BDA1",
-            borderRadius: 15,
-            width: 30,
-            height: 30,
+            flexDirection: "row",
+            marginVertical: 8,
+            backgroundColor:
+              selectedAnswer === answer
+                ? answer === questions[currentQuestionIndex]?.correctAnswer
+                  ? "green"
+                  : "red"
+                : "white", //"#F2BDA1"
+            padding: 8,
+            borderRadius: 10,
+            width: "80%",
+            height: 50,
             alignItems: "center",
-            justifyContent: "center",
-            marginRight: 10,
-            marginLeft : 10,
+            justifyContent: "left",
+            overflow: "hidden",
           }}
+          onPress={() => handleAnswerSelection(answer)}
+          disabled={isAnswerLocked}
         >
-          <Text
+          <View
             style={{
-              color: selectedAnswer === answer ? answer === questions[currentQuestionIndex]?.correctAnswer
-              ? "green"
-              : "red": "black",
-              fontWeight: "bold",
-              fontSize: 15,
-              flexWrap: 'wrap',
+              backgroundColor: selectedAnswer === answer ? "white" : "#F2BDA1",
+              borderRadius: 15,
+              width: 30,
+              height: 30,
+              alignItems: "center",
+              justifyContent: "center",
+              marginRight: 10,
+              marginLeft: 10,
             }}
           >
-            {String.fromCharCode(65 + index)}
+            <Text
+              style={{
+                color:
+                  selectedAnswer === answer
+                    ? answer === questions[currentQuestionIndex]?.correctAnswer
+                      ? "green"
+                      : "red"
+                    : "black",
+                fontWeight: "bold",
+                fontSize: 15,
+                flexWrap: "wrap",
+              }}
+            >
+              {String.fromCharCode(65 + index)}
+            </Text>
+          </View>
+          <Text
+            style={{
+              color: selectedAnswer === answer ? "white" : "black",
+              fontWeight: "bold",
+              fontSize: 15,
+            }}
+          >
+            {answer}
           </Text>
-        </View>
-        <Text
-          style={{
-            color: selectedAnswer === answer ? "white" : "black",
-            fontWeight: "bold",
-            fontSize: 15,
-          }}
-        >
-          {answer}
-        </Text>
-      </TouchableOpacity>
-    ))}
-  </View>
-);
+        </TouchableOpacity>
+      ))}
+    </LinearGradient>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -286,6 +294,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 20,
+  },
+  gradient: {
+    flex: 1,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
