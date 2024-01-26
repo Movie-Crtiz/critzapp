@@ -4,12 +4,16 @@ import axios from "axios";
 import { useUser } from "./userContext";
 import { format } from "date-fns";
 import { API_BASE_URL } from '../config';
+import { LinearGradient } from "expo-linear-gradient";
 
 const LeaderboardScreen = () => {
   const [scores, setScores] = useState([]);
   const { userData } = useUser();
   const [currentUserRank, setCurrentUserRank] = useState(0);
   const [members, setMembers] = useState({});
+
+  const primaryColor = "#423378"; // Minsk
+  const secondaryColor = "#F2BDA1"; // Mandys Pink
 
   useEffect(() => {
     const fetchData = async () => {
@@ -115,6 +119,10 @@ const LeaderboardScreen = () => {
 
   return (
     <View style={styles.container}>
+        <LinearGradient
+        colors={[primaryColor, secondaryColor]}
+        style={styles.gradient}
+      >
     <View style={styles.topImageContainer}>
         <Image source={require('../assets/crownn.png')} style={styles.smallImage}/>
     </View>
@@ -124,15 +132,21 @@ const LeaderboardScreen = () => {
         keyExtractor={(item) => item._id}
         renderItem={renderLeaderboardItem}
       />
+      </LinearGradient>
     </View>
+
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#423378", // Background color for the entire screen
-    padding: 16,
+
+  },
+  gradient: {
+    flex: 1,
+    width: "100%",
+    padding : 10,
   },
   userInfoContainer: {
     flexDirection: "row",

@@ -206,6 +206,7 @@ const AuthScreen = () => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         const uid = user.uid;
+        console.log("Sign-in successful! : ", user);
         getUserData(user.email);
         setAuthMessage("Sign-in successful!");
         console.log("Sign-in successful!");
