@@ -70,12 +70,14 @@ const ResultScreen = ({ route, navigation }) => {
   const handleFinishQuiz = async () => {
     try {
       const currentUser = userData?._id;
+      console.log(userData);
       const scoreData = {
         playerId: currentUser,
         score: score,
       };
 
-      response = await axios.post("http://localhost:3000/scores", scoreData);
+      // const response = await axios.post("http://localhost:3000/scores", scoreData);
+      const response = await axios.post(`${API_BASE_URL}/scores`, scoreData);
       console.log(response.data);
       console.log("hello");
       navigation.navigate("MainScreen");

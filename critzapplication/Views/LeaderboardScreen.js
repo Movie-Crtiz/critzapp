@@ -3,6 +3,7 @@ import { View, Text, FlatList, Image, StyleSheet } from "react-native";
 import axios from "axios";
 import { useUser } from "./userContext";
 import { format } from "date-fns";
+import { API_BASE_URL } from '../config';
 
 const LeaderboardScreen = () => {
   const [scores, setScores] = useState([]);
@@ -13,16 +14,18 @@ const LeaderboardScreen = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const scoresResponse = await axios.get("http://localhost:3000/scores");
-        const membersResponse = await axios.get(
-          "http://localhost:3000/members"
-        );
-
+        // const scoresResponse = await axios.get("http://localhost:3000/scores");
+        const scoresResponse = await axios.get(`${API_BASE_URL}/scores`);
+        // const membersResponse = await axios.get(
+        //   "http://localhost:3000/members"
+        // );
+        const membersResponse = await axios.get(`${API_BASE_URL}/members`);
+  
         const membersMap = membersResponse.data.reduce((acc, member) => {
           acc[member._id] = member;
           return acc;
         }, {});
-
+  
         const groupedScores = scoresResponse.data.reduce((acc, score) => {
           const playerId = score.playerId;
           if (!(playerId in acc) || score.score > acc[playerId].score) {
@@ -30,28 +33,34 @@ const LeaderboardScreen = () => {
           }
           return acc;
         }, {});
-
+  
         const scoresWithMembers = Object.values(groupedScores).map((score) => ({
           ...score,
           member: membersMap[score.playerId],
         }));
-
+  
         scoresWithMembers.sort((a, b) => b.score - a.score);
-
+  
         setScores(scoresWithMembers);
         setMembers(membersMap);
-
-        const currentUserIndex = scoresWithMembers.findIndex(
-          (item) => item.playerId === userData?._id
-        );
-        setCurrentUserRank(
-          currentUserIndex !== -1 ? currentUserIndex + 1 : null
-        );
+  
+        // Check if userData is available before setting currentUserRank
+        if (userData) {
+          const currentUserIndex = scoresWithMembers.findIndex(
+            (item) => item.playerId === userData?._id
+          );
+          setCurrentUserRank(
+            currentUserIndex !== -1 ? currentUserIndex + 1 : null
+          );
+        } else {
+          // Handle the case when userData is not available
+          setCurrentUserRank(null);
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-
+  
     fetchData();
   }, [userData]);
 

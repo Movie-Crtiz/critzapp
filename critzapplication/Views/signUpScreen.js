@@ -60,19 +60,6 @@ export default function signUpScreen() {
       console.log("password:", signUpPassword);
     
       // Send member data to the server
-    //   await fetch('http://localhost:3000/members', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body:{
-    //       firstName: signUpFirstName,
-    //       lastName: signUpLastName,
-    //       email: signUpEmail,
-    //       password: signUpPassword,
-    //     },
-    //   });
-
       const userObj = {
         firstName: signUpFirstName,
         lastName: signUpLastName,
@@ -248,8 +235,8 @@ export default function signUpScreen() {
         backButton: {
             position: 'absolute',
             top: 60,
-            left: 20,
-            zIndex: 1,
+            left: -15,
+           
         },
         backIcon: {
             color: 'white',

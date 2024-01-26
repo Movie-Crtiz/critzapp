@@ -73,29 +73,35 @@ const QuizScreen = ({ navigation }) => {
     }
   }, [isAnswerLocked]);
 
+  useEffect(() => {
+    return () => {
+      clearInterval(countdownRef.current);
+    };
+  }, []);
+
   const fetchQuestions = async () => {
     try {
       const response = await axios.get(
-        // "https://opentdb.com/api.php?amount=10&category=11&difficulty=medium&type=multiple"
-        "https://the-trivia-api.com/v2/questions"
+         "https://opentdb.com/api.php?amount=10&category=11&difficulty=medium&type=multiple"
+        // "https://the-trivia-api.com/v2/questions"
       );
       setLoading(false);
-      // Decode HTML entities in questions and answers
+     // answers for  "https://opentdb.com/api.php?amount=10&category=11&difficulty=medium&type=multiple"
+      const decodedQuestions = response.data.results.map((question) => ({
+        ...question,
+        question: he.decode(question.question),
+        incorrectAnswers: question.incorrect_answers.map((answer) =>
+          he.decode(answer)
+        ),
+        correctAnswer: he.decode(question.correct_answer),
+      }));
+//Answers for "https://the-trivia-api.com/v2/questions"
       // const decodedQuestions = response.data.map((question) => ({
       //   ...question,
-      //   question: he.decode(question.question),
-      //   incorrectAnswers: question.incorrectAnswers.map((answer) =>
-      //     he.decode(answer)
-      //   ),
+      //   question: he.decode(question.question.text),
+      //   incorrectAnswers: question.incorrectAnswers.map((answer) => he.decode(answer)),
       //   correctAnswer: he.decode(question.correctAnswer),
       // }));
-
-      const decodedQuestions = response.data.map((question) => ({
-        ...question,
-        question: he.decode(question.question.text),
-        incorrectAnswers: question.incorrectAnswers.map((answer) => he.decode(answer)),
-        correctAnswer: he.decode(question.correctAnswer),
-      }));
 
       setQuestions(decodedQuestions);
       setTotalQuestions(decodedQuestions.length);
@@ -135,6 +141,7 @@ const QuizScreen = ({ navigation }) => {
     }
 
     if (currentQuestionIndex < questions.length - 1) {
+      clearInterval(countdownRef.current); // Clear the interval
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedAnswer(null);
       resetCountdown();
@@ -195,7 +202,7 @@ const QuizScreen = ({ navigation }) => {
             unfilledColor="white"
           />
         )}
-        <Text style={{ color: "#757575", marginLeft: 10 }}>
+        <Text style={{ color: "white", marginLeft: 10 }}>
           {currentQuestionIndex + 1}/{totalQuestions}
         </Text>
       </View>

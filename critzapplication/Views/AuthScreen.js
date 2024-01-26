@@ -206,7 +206,7 @@ const AuthScreen = () => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         const uid = user.uid;
-        getUserData();
+        getUserData(user.email);
         setAuthMessage("Sign-in successful!");
         console.log("Sign-in successful!");
       } else {
@@ -218,7 +218,7 @@ const AuthScreen = () => {
   const handleSignInWithEmailAndPassword = async () => {
     try {
       await signInWithEmailAndPassword(auth, signInEmail, signInPassword);
-      await getUserData();
+      await getUserData(signInEmail);
       console.log("Sign-in successful!");
     } catch (error) {
       console.error("Error signing in with email and password:", error);
@@ -226,15 +226,15 @@ const AuthScreen = () => {
     }
   };
 
-  const getUserData = async () => {
+  const getUserData = async (email) => {
     try {
-      console.log(signInEmail);
-      const response = await axios.get(`${API_BASE_URL}/members/${signInEmail}`);
+      console.log(email);
+      const response = await axios.get(`${API_BASE_URL}/members/${email}`);
       console.log('response :' ,response);
       console.log('Login successfully: ', response.data);
       const userData = response.data;
-      const username = signInEmail.split('@')[0];
-      login({ ...userData, username });
+      console.log('userData: ', userData);
+      login(userData);
       console.log('userData :' ,userData);
       navigation.navigate('MainScreen');
 
@@ -261,12 +261,12 @@ const AuthScreen = () => {
       <View style={styles.decorativeCircle4}></View>
 
       <SafeAreaView style={styles.container}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Feather name="chevron-left" size={24} style={styles.backIcon} />
-        </TouchableOpacity>
+      <TouchableOpacity
+                    style={styles.backButton}
+                    onPress={() => navigation.goBack()}
+                >
+                    <Feather name="chevron-left" size={24} style={styles.backIcon} />
+                </TouchableOpacity>
 
         <Text style={styles.title}>Welcome Back!</Text>
         <View style={styles.inputView}>
@@ -312,7 +312,6 @@ const AuthScreen = () => {
           onPress={async () => {
             const signInSuccess = await handleSignInWithEmailAndPassword();
             if (signInSuccess) {
-              await getUserData();
               console.log("Sign-in successful!");
             }
           }}
@@ -403,6 +402,15 @@ const styles = StyleSheet.create({
     marginTop: 10,
     color: "green", // You can customize the styling
   },
+  backButton: {
+    position: 'absolute',
+    top: 20,
+    left: -25,   
+},
+backIcon: {
+  color: 'white',
+  fontSize: 24,
+},
 });
 
 export default AuthScreen;

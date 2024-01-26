@@ -44,13 +44,13 @@ const App = () => {
           <Stack.Screen
             name="Quiz"
             component={QuizScreen}
-            options={{ headerShown: false }}
+            options={{ headerShown: false , gestureEnabled: false  }}
           />
           {/* <Stack.Screen name="Result" component={ResultScreen} /> */}
           <Stack.Screen name="SplashScreen" component={SplashScreen} />
           <Stack.Screen name="Initial" component={initialScreen} />
           <Stack.Screen name="SignUp" component={signUpScreen} />
-          <Stack.Screen name="MainScreen" component={mainScreen} />
+          <Stack.Screen name="MainScreen" component={mainScreen} options={{ gestureEnabled: false  }} />
           <Stack.Screen name="Auth" component={AuthScreen} />
           <Stack.Screen
   name="Leaderboard"component={LeaderboardScreen}
@@ -69,7 +69,7 @@ const App = () => {
           <Stack.Screen
             name="Result"
             component={ResultScreen}
-            options={{ headerShown: false }}
+            options={{ headerShown: false ,gestureEnabled: false  }}
           />
         </Stack.Navigator>
       </NavigationContainer>

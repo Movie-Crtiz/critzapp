@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect , useState} from "react";
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Title, Paragraph } from "react-native-paper";
@@ -8,14 +8,7 @@ import { useUser } from "./userContext";
 const mainScreen = () => {
   const navigation = useNavigation();
   const { userData } = useUser();
-  const user = {
-    name: userData?.username
-      ? userData.username.charAt(0).toUpperCase() + userData.username.slice(1)
-      : "Guest",
-    profileImage: require("../assets/icon.png"),
-    ranking: 42,
-  };
-
+  const [user, setUser] = useState(null);
   const primaryColor = "#423378"; // Minsk
   const secondaryColor = "#F2BDA1"; // Mandys Pink
   const shadowColor = "#C48F7A"; // Shadow color for the decorative circle
@@ -39,7 +32,6 @@ const mainScreen = () => {
       overflow: "hidden",
       elevation: 5,
       backgroundColor: "rgba(255,255,255,0.2)",
-      alignItems: "center",
       position: "relative",
       // padding: 20,
       justifyContent: "center",
@@ -98,7 +90,7 @@ const mainScreen = () => {
     },
     headerButtons: {
       flexDirection: "row",
-      justifyContent: "space-between",
+      justifyContent: "flex-end",
       width: "100%",
       paddingHorizontal: 20,
       position: "absolute",
@@ -219,6 +211,19 @@ const mainScreen = () => {
       height: 200,
     },
   });
+
+  useEffect(() => {
+    console.log(userData);
+    const user = {
+      name: userData?.firstName
+        ? userData?.firstName.charAt(0).toUpperCase() + userData?.firstName.slice(1)
+        : "Guest",
+      profileImage: require("../assets/icon.png"),
+      ranking: 42,
+    };
+    setUser(user);
+
+  }, [userData]);
 
   return (
     <LinearGradient
