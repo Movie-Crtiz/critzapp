@@ -165,82 +165,109 @@ const QuizScreen = ({ navigation }) => {
     );
   }
 
-  return (
-    <View style={styles.contentContainer}>
-      <Text
-        style={{
-          color: timerColor,
-          textAlign: "left",
-          alignSelf: "flex-start",
-          paddingLeft: 20,
-          paddingBottom: 30,
-        }}
-      >
-        Time Left: {countdown}s
+return (
+  <View style={styles.contentContainer}>
+    <Text
+      style={{
+        color: timerColor,
+        textAlign: "left",
+        alignSelf: "flex-start",
+        paddingLeft: 20,
+        paddingBottom: 30,
+      }}
+    >
+      Time Left: {countdown}s
+    </Text>
+    <View style={styles.headerContainer}>
+      {totalQuestions > 0 && (
+        <Progress.Bar
+          progress={currentQuestionIndex / totalQuestions}
+          width={300}
+          height={10}
+          color="#31CD63"
+          unfilledColor="white"
+        />
+      )}
+      <Text style={{ color: "#757575", marginLeft: 10 }}>
+        {currentQuestionIndex + 1}/{totalQuestions}
       </Text>
-      <View style={styles.headerContainer}>
-        {totalQuestions > 0 && (
-          <Progress.Bar
-            progress={currentQuestionIndex / totalQuestions}
-            width={300}
-            height={10}
-            color="#31CD63"
-            unfilledColor="white"
-          />
-        )}
-        <Text style={{ color: "#757575", marginLeft: 10 }}>
-          {currentQuestionIndex + 1}/{totalQuestions}
-        </Text>
-      </View>
-      <Text
+    </View>
+    <Text
+      style={{
+        color: "white",
+        fontWeight: "bold",
+        width: '80%',
+        fontSize: 20,
+        paddingTop: 40,
+        paddingBottom: 80,
+        alignSelf: 'center',
+      }}
+    >
+      {questions[currentQuestionIndex]?.question}
+    </Text>
+    {shuffledAnswers.map((answer, index) => (
+      <TouchableOpacity
+        key={index}
         style={{
-          color: "white",
-          fontWeight: "bold",
-          fontSize: 20,
-          paddingTop: 40,
-          paddingBottom: 80,
+          flexDirection: "row",
+          marginVertical: 8,
+          backgroundColor:
+            selectedAnswer === answer
+              ? answer === questions[currentQuestionIndex]?.correctAnswer
+                ? "green"
+                : "red"
+              : "white", //"#F2BDA1"
+          padding: 8,
+          borderRadius: 10,
+          width: '80%',
+          height: 50,
+          alignItems: "center",
+          justifyContent: "left",
+          overflow: 'hidden',
         }}
+        onPress={() => handleAnswerSelection(answer)}
+        disabled={isAnswerLocked}
       >
-          {/* {he.decode(questions[currentQuestionIndex]?.question || "")} */}
-        {questions[currentQuestionIndex]?.question}
-      </Text>
-      {shuffledAnswers.map((answer, index) => (
-        <TouchableOpacity
-          key={index}
+        <View
           style={{
-            flexDirection: "row",
-            marginVertical: 8,
-            backgroundColor:
-              selectedAnswer === answer
-                ? answer === questions[currentQuestionIndex]?.correctAnswer
-                  ? "green"
-                  : "red"
-                : "#F2BDA1",
-            padding: 8,
-            borderRadius: 5,
-            width: 300,
-            height: 50,
+            backgroundColor:  selectedAnswer === answer
+            ?  "white"
+            : "#F2BDA1",
+            borderRadius: 15,
+            width: 30,
+            height: 30,
             alignItems: "center",
             justifyContent: "center",
+            marginRight: 10,
+            marginLeft : 10,
           }}
-          onPress={() => handleAnswerSelection(answer)}
-          disabled={isAnswerLocked}
         >
           <Text
             style={{
-              color: selectedAnswer === answer ? "white" : "black",
+              color: selectedAnswer === answer ? answer === questions[currentQuestionIndex]?.correctAnswer
+              ? "green"
+              : "red": "black",
               fontWeight: "bold",
               fontSize: 15,
+              flexWrap: 'wrap',
             }}
           >
-            {" "}
-            {/* {he.decode(answer || "")} */}
-            {answer}
+            {String.fromCharCode(65 + index)}
           </Text>
-        </TouchableOpacity>
-      ))}
-    </View>
-  );
+        </View>
+        <Text
+          style={{
+            color: selectedAnswer === answer ? "white" : "black",
+            fontWeight: "bold",
+            fontSize: 15,
+          }}
+        >
+          {answer}
+        </Text>
+      </TouchableOpacity>
+    ))}
+  </View>
+);
 };
 
 const styles = StyleSheet.create({
