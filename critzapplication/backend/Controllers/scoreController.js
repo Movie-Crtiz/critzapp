@@ -20,7 +20,17 @@ const getScoresByPlayer = async (playerId) => {
   }
 };
 
+const getAllScores = async () => {
+  try {
+    const allScores = await Score.find();
+    return allScores;
+  } catch (error) {
+    throw new Error(`Error fetching all scores: ${error.message}`);
+  }
+};
+
 module.exports = {
   addScore,
   getScoresByPlayer,
+  getAllScores,
 };

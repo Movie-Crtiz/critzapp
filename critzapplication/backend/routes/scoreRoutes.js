@@ -23,4 +23,13 @@ router.get('/scores/:playerId', async (req, res) => {
   }
 });
 
+router.get('/scores', async (req, res) => {
+  try {
+    const allScores = await scoreController.getAllScores();
+    res.json(allScores);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 module.exports = router;

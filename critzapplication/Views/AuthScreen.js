@@ -233,7 +233,8 @@ const AuthScreen = () => {
       console.log('response :' ,response);
       console.log('Login successfully: ', response.data);
       const userData = response.data;
-      login(userData);
+      const username = signInEmail.split('@')[0];
+      login({ ...userData, username });
       console.log('userData :' ,userData);
       navigation.navigate('MainScreen');
 

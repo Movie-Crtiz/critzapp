@@ -21,7 +21,17 @@ const getMemberByEmail = async (email) => {
   }
 };
 
+const getAllMembers = async () => {
+  try {
+    const allMembers = await Member.find();
+    return allMembers;
+  } catch (error) {
+    throw new Error(`Error fetching all Members: ${error.message}`);
+  }
+};
+
 module.exports = {
   createMember,
   getMemberByEmail,
+  getAllMembers,
 };

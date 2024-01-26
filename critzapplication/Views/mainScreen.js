@@ -1,16 +1,18 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { FontAwesome } from '@expo/vector-icons'; // Import FontAwesome from expo vector-icons
+import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-
+import { useUser } from './userContext';
 const mainScreen = () => {
   const navigation = useNavigation();
-
+  const { userData } = useUser();
   const user = { 
-    name: 'John Doe', 
+    name: userData?.username
+      ? userData.username.charAt(0).toUpperCase() + userData.username.slice(1)
+      : 'Guest', 
     profileImage: require('../assets/icon.png'),
-    ranking: 42 
+    ranking: 42,
   };
 
   const primaryColor = '#423378'; // Minsk
@@ -115,9 +117,9 @@ const mainScreen = () => {
         <View style={styles.cardContainer}>
           <FontAwesome name="user-circle-o" style={styles.profileIcon} />
           <Image source={user.profileImage} style={styles.profileImage} />
-          <Text style={styles.titleText}>Welcome {user ? user.name : 'Guest'}</Text>
+          <Text style={styles.titleText}>Welcome {user ? user.name : 'Guest'} !!</Text>
           <Text style={styles.subtitle}>Get ready for the Quiz!</Text>
-          <Text style={styles.rankingText}>Ranking: {user.ranking}</Text>
+          {/* <Text style={styles.rankingText}>Ranking: {user.ranking}</Text> */}
           <Image source={require('../assets/quizPic.png')} style={styles.backgroundImage} />
         </View>
 

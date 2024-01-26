@@ -23,4 +23,13 @@ router.get('/members/:email', async (req, res) => {
   }
 });
 
+router.get('/members', async (req, res) => {
+  try {
+    const allMembers = await memberController.getAllMembers();
+    res.json(allMembers);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 module.exports = router;
