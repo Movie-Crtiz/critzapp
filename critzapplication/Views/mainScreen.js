@@ -5,6 +5,8 @@ import { Title, Paragraph } from "react-native-paper";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useUser } from "./userContext";
+import VoiceRecognition from '../Models/VoiceRecognition'; 
+
 const mainScreen = () => {
   const navigation = useNavigation();
   const { userData } = useUser();
@@ -12,6 +14,7 @@ const mainScreen = () => {
   const primaryColor = "#423378"; // Minsk
   const secondaryColor = "#F2BDA1"; // Mandys Pink
   const shadowColor = "#C48F7A"; // Shadow color for the decorative circle
+  const voiceRecognition = new VoiceRecognition(navigation);
 
   const styles = StyleSheet.create({
     container: {
@@ -211,6 +214,10 @@ const mainScreen = () => {
       height: 200,
     },
   });
+  
+  const handleVoiceRecognition = () => {
+    voiceRecognition.startRecognition();
+  };
 
   useEffect(() => {
     console.log(userData);
@@ -276,6 +283,9 @@ const mainScreen = () => {
       >
         <Text style={styles.buttonText}>Start Quiz</Text>
       </TouchableOpacity>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Button title="Start Voice Recognition" onPress={handleVoiceRecognition} />
+      </View>
     </LinearGradient>
   );
 };
