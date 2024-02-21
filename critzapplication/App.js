@@ -13,7 +13,9 @@ import AuthScreen from './Views/AuthScreen';
 import firebaseApp from './firebaseConfig';
 import signUpScreen from './Views/signUpScreen';
 import mainScreen from './Views/mainScreen';
-
+import movieHomeScreen from './Views/movieHomeScreen';
+import movieDetailScreen from './Views/movieDetailScreen';
+import movieReviewScreen from './Views/movieReviewScreen';
 function SplashScreen({ navigation }) {
   React.useEffect(() => {
     const splashTimer = setTimeout(() => {
@@ -52,6 +54,9 @@ const App = () => {
           <Stack.Screen name="SignUp" component={signUpScreen} />
           <Stack.Screen name="MainScreen" component={mainScreen} options={{ gestureEnabled: false  }} />
           <Stack.Screen name="Auth" component={AuthScreen} />
+          <Stack.Screen name="MoviesHome" component={movieHomeScreen} />
+          <Stack.Screen name="MovieDetail" component={movieDetailScreen} />
+          <Stack.Screen name="MovieReview" component={movieReviewScreen} />
           <Stack.Screen
   name="Leaderboard"component={LeaderboardScreen}
   options={{ headerStyle: {

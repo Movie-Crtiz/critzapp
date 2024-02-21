@@ -291,7 +291,12 @@ const mainScreen = () => {
         source={require("../assets/QuizImage.png")}
         style={styles.backgroundImage}
       />
-
+      <TouchableOpacity
+        style={styles.buttonsContainer}
+        onPress={() => navigation.navigate("MoviesHome")}
+      >
+        <Text style={styles.buttonText}>Explore Movies</Text>
+      </TouchableOpacity>
       <TouchableOpacity
         style={styles.buttonsContainer}
         onPress={() => navigation.navigate("Quiz")}
