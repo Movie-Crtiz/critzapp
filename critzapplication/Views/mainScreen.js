@@ -1,11 +1,19 @@
-import React, {useEffect , useState} from "react";
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  Button,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Title, Paragraph } from "react-native-paper";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useUser } from "./userContext";
-import VoiceRecognition from '../Models/VoiceRecognition'; 
+import VoiceRecognition from "../Models/VoiceRecognition";
+import * as Speech from "expo-speech-recognition";
 
 const mainScreen = () => {
   const navigation = useNavigation();
@@ -65,7 +73,7 @@ const mainScreen = () => {
       fontSize: 24,
       fontWeight: "bold",
       color: primaryColor,
-      alignSelf:'center',
+      alignSelf: "center",
     },
     rankingText: {
       fontSize: 14,
@@ -214,22 +222,29 @@ const mainScreen = () => {
       height: 200,
     },
   });
-  
-  const handleVoiceRecognition = () => {
-    voiceRecognition.startRecognition();
+
+  const handleVoiceRecognition = async () => {
+    try {
+      // Start listening for speech
+      voiceRecognition.startRecognition();
+      // Handle speech recognition results
+      //Speech.addEventListener("SpeechResults", onSpeechResults);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
     console.log(userData);
     const user = {
       name: userData?.firstName
-        ? userData?.firstName.charAt(0).toUpperCase() + userData?.firstName.slice(1)
+        ? userData?.firstName.charAt(0).toUpperCase() +
+          userData?.firstName.slice(1)
         : "Guest",
       profileImage: require("../assets/icon.png"),
       ranking: 42,
     };
     setUser(user);
-
   }, [userData]);
 
   return (
@@ -283,8 +298,11 @@ const mainScreen = () => {
       >
         <Text style={styles.buttonText}>Start Quiz</Text>
       </TouchableOpacity>
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Button title="Start Voice Recognition" onPress={handleVoiceRecognition} />
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Button
+          title="Start Voice Recognition"
+          onPress={handleVoiceRecognition}
+        />
       </View>
     </LinearGradient>
   );

@@ -1,30 +1,26 @@
 import React, { useEffect } from 'react';
-import Voice from '@react-native-community/voice';
+import * as Speech from 'expo-speech';
 import { useUser } from '../Views/userContext';
 
 const VoiceRecognition = ({ navigation }) => {
   const { logout } = useUser();
 
   useEffect(() => {
-    initVoiceRecognition();
+    // Start voice recognition when the component mounts
+    startRecognition();
 
+    // Clean up voice recognition when the component unmounts
     return () => {
-      Voice.destroy().then(Voice.removeAllListeners);
+      stopRecognition();
     };
   }, []);
 
-  const initVoiceRecognition = () => {
-    Voice.onSpeechResults = onSpeechResults;
-    Voice.onSpeechEnd = onSpeechEnd;
-  };
-
-  const onSpeechEnd = () => {
-    stopRecognition();
-};
-
   const startRecognition = async () => {
     try {
-      await Voice.start('en-US');
+      // Start listening for speech
+      Speech.start();
+      // Handle speech recognition results
+      Speech.addEventListener('SpeechResults', onSpeechResults);
     } catch (error) {
       console.error(error);
     }
@@ -32,63 +28,44 @@ const VoiceRecognition = ({ navigation }) => {
 
   const stopRecognition = async () => {
     try {
-      await Voice.stop();
+      // Stop listening for speech
+      Speech.stop();
+      // Remove the event listener
+      Speech.removeEventListener('SpeechResults', onSpeechResults);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const onSpeechResults = results => {
-    const command = results[0].toLowerCase(); // Get the first recognized command
-    console.log('Speech results: ', command);
+  const onSpeechResults = event => {
+    // Get the recognized speech command
+    const command = event.results[0];
+    // Process the command
     processVoiceCommand(command);
   };
 
-//   processVoiceCommand = command => {
-//     switch (command) {
-//       case 'search for a movie':
-//         this.navigation.navigate('MovieSearchScreen');
-//         break;
-//       case 'favorite movie':
-//         this.navigation.navigate('FavoriteMoviesScreen');
-//         break;
-//       case 'start trivia game':
-//         this.navigation.navigate('TriviaGameScreen');
-//         break;
-//       case 'go to leaderboard':
-//         this.navigation.navigate('LeaderboardScreen');
-//         break;
-//       case 'logout':
-//         // Perform logout action
-//         break;
-//       default:
-//         // Handle unrecognized command
-//         break;
-//     }
-//   };
-
-  processVoiceCommand = command => {
+  const processVoiceCommand = command => {
     const lowercaseCommand = command.toLowerCase();
   
     if (lowercaseCommand.includes('search')) {
-      this.navigation.navigate('MovieSearchScreen');
+      navigation.navigate('MovieSearchScreen');
     } else if (lowercaseCommand.includes('favorite')) {
-      this.navigation.navigate('FavoriteMoviesScreen');
+      navigation.navigate('FavoriteMoviesScreen');
     } else if (lowercaseCommand.includes('trivia')) {
-      this.navigation.navigate('TriviaGameScreen');
+      navigation.navigate('TriviaGameScreen');
     } else if (lowercaseCommand.includes('leaderboard')) {
-      this.navigation.navigate('LeaderboardScreen');
+      navigation.navigate('LeaderboardScreen');
     } else if (lowercaseCommand.includes('logout')) {
       logout(); // Assuming this function exists to handle logout
-      this.navigation.navigate('Initial');
+      navigation.navigate('Initial');
     } else if (lowercaseCommand.includes('detail')) {
-      this.navigation.navigate('MovieDetailScreen');
+      navigation.navigate('MovieDetailScreen');
     } else {
-        // Handle unrecognized command
-      }
-    };
-  
-    return null; // Voice recognition component doesn't render anything visible
+      // Handle unrecognized command
+    }
   };
-  
-  export default VoiceRecognition;
+
+  return null; // Voice recognition component doesn't render anything visible
+};
+
+export default VoiceRecognition;
