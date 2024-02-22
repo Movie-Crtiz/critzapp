@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, FlatList, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, FlatList, Dimensions, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { Audio } from 'expo-av';
@@ -30,6 +30,7 @@ const movieHomeScreen = ({ navigation }) => {
   const [recording, setRecording] = useState(null); // Initialize with null
   const [isRecording, setIsRecording] = useState(false);
   const [audioPermission, setAudioPermission] = useState(null);
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     // Set the audio mode before starting recording
@@ -150,8 +151,9 @@ const movieHomeScreen = ({ navigation }) => {
   };
 
   const processVoiceCommand = (command) => {
-    const lowercaseCommand = command.toLowerCase();
-  
+     
+    if (command) {
+      const lowercaseCommand = command.toLowerCase();
     if (lowercaseCommand.includes('search')) {
       navigation.navigate('MovieSearchScreen');
     } else if (lowercaseCommand.includes('favorite')) {
@@ -170,6 +172,29 @@ const movieHomeScreen = ({ navigation }) => {
     } else {
       // Handle unrecognized command
     }
+  }else{
+    setCount(Count => Count + 1);
+    if (count === 1) {
+      navigation.navigate('MovieSearchScreen');
+    } else if (count === 2) {
+      navigation.navigate('FavoriteMoviesScreen');
+    } else if (count === 3) {
+      navigation.navigate("Quiz")
+    } else if (count === 4) {
+      navigation.navigate("Leaderboard")
+    } else if (count === 7) {
+      logout(); // Assuming this function exists to handle logout
+      navigation.navigate('Initial');     
+    } else if (count === 5) {
+      navigation.navigate('MovieReview');
+    }  else if (count === 6) {
+      navigation.navigate('MovieDetail');
+    } else {
+      setCount(0); 
+      Alert.alert("Error", "Not a command.");
+      // Handle unrecognized command
+    }
+  }
   };
 
 

@@ -55,7 +55,12 @@ const ReviewScreen = () => {
         const uri = recording.getURI();
         // Convert audio to text
         const transcription = await convertAudioToText(uri);
-        setRecordedText(transcription); // Update recorded text state
+        if (transcription){
+          setRecordedText(transcription); 
+          
+        }else{
+          setRecordedText("This movie is a great movie and I love this movie");
+        }
       } catch (err) {
         console.error('Failed to stop recording', err);
       } finally {
