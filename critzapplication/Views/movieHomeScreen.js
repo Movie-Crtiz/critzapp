@@ -156,15 +156,17 @@ const movieHomeScreen = ({ navigation }) => {
       navigation.navigate('MovieSearchScreen');
     } else if (lowercaseCommand.includes('favorite')) {
       navigation.navigate('FavoriteMoviesScreen');
-    } else if (lowercaseCommand.includes('trivia')) {
-      navigation.navigate('TriviaGameScreen');
+    } else if (lowercaseCommand.includes('game')) {
+      navigation.navigate("Quiz")
     } else if (lowercaseCommand.includes('leaderboard')) {
-      navigation.navigate('LeaderboardScreen');
+      navigation.navigate("Leaderboard")
     } else if (lowercaseCommand.includes('logout')) {
       logout(); // Assuming this function exists to handle logout
-      navigation.navigate('Initial');
-    } else if (lowercaseCommand.includes('detail')) {
-      navigation.navigate('MovieDetailScreen');
+      navigation.navigate('Initial');     
+    } else if (lowercaseCommand.includes('review')) {
+      navigation.navigate('MovieReview');
+    }  else if (lowercaseCommand.includes('detail')) {
+      navigation.navigate('MovieDetail');
     } else {
       // Handle unrecognized command
     }
