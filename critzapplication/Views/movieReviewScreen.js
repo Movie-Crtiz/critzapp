@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, ScrollView, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Audio } from 'expo-av';
-import * as Speech from 'expo-speech';
 import axios from 'axios';
 import * as FileSystem from 'expo-file-system';
 import * as Permissions from 'expo-permissions';

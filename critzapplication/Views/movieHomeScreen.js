@@ -64,42 +64,46 @@ const movieHomeScreen = ({ navigation }) => {
   };
 
   const toggleRecording = async () => {
-
-    if (audioPermission  === 'granted'){
-    if (isRecording) {
-      // Stop recording
-      try {
-        await recording.stopAndUnloadAsync();
-        setIsRecording(false);
-        const uri = recording.getURI();
-        // Convert audio to text
-        const transcription = await convertAudioToText(uri);
-        processVoiceCommand(transcription); // Update recorded text state
-      } catch (err) {
-        console.error('Failed to stop recording', err);
-      } finally {
-        // Reset recording state after stopping
-        setRecording(null);
+    if (audioPermission === 'granted') {
+      if (isRecording) {
+        // Stop recording
+        try {
+          await recording.stopAndUnloadAsync();
+          setIsRecording(false);
+          const uri = recording.getURI();
+          // Convert audio to text
+          const transcription = await convertAudioToText(uri);
+          processVoiceCommand(transcription); // Update recorded text state
+        } catch (err) {
+          console.error('Failed to stop recording', err);
+        } finally {
+          // Reset recording state after stopping
+          setRecording(null);
+        }
+      } else {
+        // Start recording
+        try {
+          if (recording) {
+            await recording.stopAndUnloadAsync();
+          }
+          const newRecording = new Audio.Recording();
+          const recordingStatus = await newRecording.prepareToRecordAsync(Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY);
+          if (recordingStatus.canRecord) {
+            await newRecording.startAsync();
+            setRecording(newRecording);
+            setIsRecording(true);
+          } else {
+            console.error('Failed to prepare recording:', recordingStatus.error);
+          }
+        } catch (err) {
+          console.error('Failed to start recording', err);
+        }
       }
     } else {
-      // Start recording
-      try {
-        if (recording) {
-          await recording.stopAndUnloadAsync();
-        }
-        const newRecording = new Audio.Recording();
-        await newRecording.prepareToRecordAsync(Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY);
-        await newRecording.startAsync();
-        setRecording(newRecording);
-        setIsRecording(true);
-      } catch (err) {
-        console.error('Failed to start recording', err);
-      }
+      getPermission();
     }
-  }else{
-    getPermission();
-  }
   };
+  
 
   const convertAudioToText = async (audioUri) => {
     try {
@@ -167,35 +171,70 @@ const movieHomeScreen = ({ navigation }) => {
     } else if (lowercaseCommand.includes('review')) {
       navigation.navigate('MovieReview');
     }  else if (lowercaseCommand.includes('detail')) {
-      navigation.navigate('MovieDetail', { movie: topRatedMovies[0] });
+      const foundMovie = findMovie('Movie Title 1');
+      if (foundMovie) {
+        navigation.navigate('MovieDetail', { movie: foundMovie });
+        console.log('Found Movie:', foundMovie);
+      } else {
+        Alert.alert("Error", "Movie not found.");
+        console.log('Movie not found!');
+      }
+      
     } else {
-      // Handle unrecognized command
+      Alert.alert("Error", "Unrecognized command.");
     }
   }else{
-    setCount(Count => Count + 1);
-    if (count === 1) {
+    console.log('count : ',count)
+    if (count === 5) {
+      setCount(Count => Count + 1);
+      console.log('count : ',count)
       navigation.navigate('MovieSearchScreen');
-    } else if (count === 2) {
-      navigation.navigate('FavoriteMoviesScreen');
-    } else if (count === 3) {
-      navigation.navigate("Quiz")
     } else if (count === 4) {
+      setCount(Count => Count + 1);
+      console.log('count : ',count)
+      navigation.navigate('FavoriteMoviesScreen');
+    } else if (count === 2) {
+      setCount(Count => Count + 1);
+      console.log('count : ',count)
+      navigation.navigate("Quiz")
+    } else if (count === 3) {
+      setCount(Count => Count + 1);
+      console.log('count : ',count)
       navigation.navigate("Leaderboard")
-    } else if (count === 7) {
-      logout(); // Assuming this function exists to handle logout
+    } else if (count === 6) {
+      setCount(Count => Count + 1);
+      console.log('count : ',count)
+      logout();
       navigation.navigate('Initial');     
-    } else if (count === 5) {
+    } else if (count === 1) {
+      setCount(Count => Count + 1);
+      console.log('count : ',count)
       navigation.navigate('MovieReview');
-    }  else if (count === 6) {
-      navigation.navigate('MovieDetail', { movie: topRatedMovies[0] });
+    }  else if (count === 0) {
+      setCount(Count => Count + 1);
+      console.log('count : ',count)
+      const foundMovie = findMovie('Movie Title 1');
+      if (foundMovie) {
+        navigation.navigate('MovieDetail', { movie: foundMovie });
+        console.log('Found Movie:', foundMovie);
+      } else {
+        Alert.alert("Error", "Movie not found.");
+        console.log('Movie not found!');
+      }
     } else {
       setCount(0); 
-      Alert.alert("Error", "Not a command.");
-      // Handle unrecognized command
+      Alert.alert("Error", "Unrecognized command.");
     }
   }
   };
 
+  const findMovie = (title) => {
+    let foundMovie = trendingMovies.find(movie => movie.title === title);
+    if (!foundMovie) {
+      foundMovie = topRatedMovies.find(movie => movie.title === title);
+    }
+    return foundMovie;
+  };
 
   const renderMovieItem = ({ item }) => (
     <TouchableOpacity
