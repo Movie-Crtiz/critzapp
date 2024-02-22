@@ -150,8 +150,7 @@ const movieHomeScreen = ({ navigation }) => {
     }
   };
 
-  const processVoiceCommand = (command) => {
-     
+  const processVoiceCommand = (command) => {     
     if (command) {
       const lowercaseCommand = command.toLowerCase();
     if (lowercaseCommand.includes('search')) {
@@ -168,7 +167,7 @@ const movieHomeScreen = ({ navigation }) => {
     } else if (lowercaseCommand.includes('review')) {
       navigation.navigate('MovieReview');
     }  else if (lowercaseCommand.includes('detail')) {
-      navigation.navigate('MovieDetail');
+      navigation.navigate('MovieDetail', { movie: topRatedMovies[0] });
     } else {
       // Handle unrecognized command
     }
@@ -188,7 +187,7 @@ const movieHomeScreen = ({ navigation }) => {
     } else if (count === 5) {
       navigation.navigate('MovieReview');
     }  else if (count === 6) {
-      navigation.navigate('MovieDetail');
+      navigation.navigate('MovieDetail', { movie: topRatedMovies[0] });
     } else {
       setCount(0); 
       Alert.alert("Error", "Not a command.");
