@@ -1,7 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, FlatList, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
+import { Audio } from 'expo-av';
+import * as Speech from 'expo-speech';
+import axios from 'axios';
+import * as FileSystem from 'expo-file-system';
+import * as Permissions from 'expo-permissions';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const carouselWidth = screenWidth * 0.9; 
@@ -21,6 +26,150 @@ const movieHomeScreen = ({ navigation }) => {
     { id: '2', title: 'Top Rated Movie 2', imageUrl: require('../assets/Movie.png'), description: 'Description of top rated movie 2', rating: 3.8 },
     { id: '3', title: 'Top Rated Movie 3', imageUrl: require('../assets/Movie.png'), description: 'Description of top rated movie 3', rating: 4.2 },
   ];
+
+  const [recording, setRecording] = useState(null); // Initialize with null
+  const [isRecording, setIsRecording] = useState(false);
+  const [audioPermission, setAudioPermission] = useState(null);
+
+  useEffect(() => {
+    // Set the audio mode before starting recording
+    Audio.setAudioModeAsync({
+      allowsRecordingIOS: true,
+      playsInSilentModeIOS: true, // Optional
+    });
+  }, []);
+
+  useEffect(() => {
+    getPermission();
+  }, []);
+
+  // const getPermission = async () => {
+  //   const { status } = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
+  //   setAudioPermission(status);
+  //   if (status !== 'granted') {
+  //     alert('Permission to access audio recording was denied');
+  //   }
+  // };
+  const getPermission = async () => {
+    try {
+      const { status } = await Audio.requestPermissionsAsync();
+      setAudioPermission(status);
+      if (status !== 'granted') {
+        alert('Permission to access audio recording was denied');
+      }
+    } catch (error) {
+      console.error('Error requesting audio permission:', error);
+    }
+  };
+
+  const toggleRecording = async () => {
+
+    if (audioPermission  === 'granted'){
+    if (isRecording) {
+      // Stop recording
+      try {
+        await recording.stopAndUnloadAsync();
+        setIsRecording(false);
+        const uri = recording.getURI();
+        // Convert audio to text
+        const transcription = await convertAudioToText(uri);
+        processVoiceCommand(transcription); // Update recorded text state
+      } catch (err) {
+        console.error('Failed to stop recording', err);
+      } finally {
+        // Reset recording state after stopping
+        setRecording(null);
+      }
+    } else {
+      // Start recording
+      try {
+        if (recording) {
+          await recording.stopAndUnloadAsync();
+        }
+        const newRecording = new Audio.Recording();
+        await newRecording.prepareToRecordAsync(Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY);
+        await newRecording.startAsync();
+        setRecording(newRecording);
+        setIsRecording(true);
+      } catch (err) {
+        console.error('Failed to start recording', err);
+      }
+    }
+  }else{
+    getPermission();
+  }
+  };
+
+  const convertAudioToText = async (audioUri) => {
+    try {
+      console.log('audioUri:', audioUri);
+      const base64AudioData = await convertAndSendAudio(audioUri);
+      // console.log('base64AudioData:', base64AudioData);
+
+      const response = await axios.post(
+        'https://speech.googleapis.com/v1/speech:recognize?key=',
+        {
+          config: {
+            encoding: 'LINEAR16',
+          sampleRateHertz: 16000,
+          languageCode: 'en-US',
+          },
+          audio: {
+            content: base64AudioData,
+          },
+        }
+      );
+      console.error('response:', response.data.results[0]);
+      // Extract transcription from the response
+       const transcription = response.data.results[0].alternatives[0].transcript;
+       return transcription;
+    } catch (error) {
+      console.error('Failed to convert audio to text:', error);
+      return null;
+    }
+  };
+
+  const convertAndSendAudio = async (fileUri) => {
+    try {
+      // Read the audio file from local storage
+      const fileInfo = await FileSystem.getInfoAsync(fileUri);
+      if (!fileInfo.exists) {
+        console.error('Audio file does not exist');
+        return;
+      }
+
+      // Read the contents of the audio file
+      const { uri } = fileInfo;
+      const audioBuffer = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 });
+
+      // Send the audio data to the Speech-to-Text API
+     return audioBuffer;
+    } catch (error) {
+      console.error('Failed to convert and send audio', error);
+    }
+  };
+
+  const processVoiceCommand = (command) => {
+    const lowercaseCommand = command.toLowerCase();
+  
+    if (lowercaseCommand.includes('search')) {
+      navigation.navigate('MovieSearchScreen');
+    } else if (lowercaseCommand.includes('favorite')) {
+      navigation.navigate('FavoriteMoviesScreen');
+    } else if (lowercaseCommand.includes('trivia')) {
+      navigation.navigate('TriviaGameScreen');
+    } else if (lowercaseCommand.includes('leaderboard')) {
+      navigation.navigate('LeaderboardScreen');
+    } else if (lowercaseCommand.includes('logout')) {
+      logout(); // Assuming this function exists to handle logout
+      navigation.navigate('Initial');
+    } else if (lowercaseCommand.includes('detail')) {
+      navigation.navigate('MovieDetailScreen');
+    } else {
+      // Handle unrecognized command
+    }
+  };
+
 
   const renderMovieItem = ({ item }) => (
     <TouchableOpacity
@@ -57,7 +206,7 @@ const movieHomeScreen = ({ navigation }) => {
             <Icon name="user" size={screenWidth * 0.06} color="#FFF" />
           </TouchableOpacity>
           <Text style={styles.title}>Movie Critz</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+          <TouchableOpacity onPress={() => toggleRecording()}>
             <Icon name="microphone" size={screenWidth * 0.06} color="#FFF" />
           </TouchableOpacity>
         </View>
