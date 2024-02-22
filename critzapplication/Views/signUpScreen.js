@@ -88,7 +88,7 @@ export default function signUpScreen() {
       login(userData);
       console.log('userData :' ,userData);
     //   navigation.navigate('MainScreen');
-      navigation.navigate('movieHomeScreen');
+      navigation.navigate('MoviesHome');
 
 
     } catch (error) {

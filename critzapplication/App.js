@@ -52,11 +52,11 @@ const App = () => {
           <Stack.Screen name="SplashScreen" component={SplashScreen} />
           <Stack.Screen name="Initial" component={initialScreen} />
           <Stack.Screen name="SignUp" component={signUpScreen} />
-          <Stack.Screen name="MainScreen" component={mainScreen} options={{ gestureEnabled: false  }} />
+          <Stack.Screen name="MainScreen" component={mainScreen} />
           <Stack.Screen name="Auth" component={AuthScreen} />
-          <Stack.Screen name="MoviesHome" component={movieHomeScreen} />
+          <Stack.Screen name="MoviesHome" component={movieHomeScreen}  options={{ gestureEnabled: false  }} />
           <Stack.Screen name="MovieDetail" component={movieDetailScreen} />
-          <Stack.Screen name="MovieReview" component={movieReviewScreen} />
+          <Stack.Screen name="MovieReview" component={movieReviewScreen}  />
           <Stack.Screen
   name="Leaderboard"component={LeaderboardScreen}
   options={{ headerStyle: {

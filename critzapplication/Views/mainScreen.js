@@ -223,17 +223,6 @@ const mainScreen = () => {
     },
   });
 
-  const handleVoiceRecognition = async () => {
-    try {
-      // Start listening for speech
-      voiceRecognition.startRecognition();
-      // Handle speech recognition results
-      //Speech.addEventListener("SpeechResults", onSpeechResults);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   useEffect(() => {
     console.log(userData);
     const user = {
@@ -293,22 +282,10 @@ const mainScreen = () => {
       />
       <TouchableOpacity
         style={styles.buttonsContainer}
-        onPress={() => navigation.navigate("MoviesHome")}
-      >
-        <Text style={styles.buttonText}>Explore Movies</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.buttonsContainer}
         onPress={() => navigation.navigate("Quiz")}
       >
         <Text style={styles.buttonText}>Start Quiz</Text>
       </TouchableOpacity>
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Button
-          title="Start Voice Recognition"
-          onPress={handleVoiceRecognition}
-        />
-      </View>
     </LinearGradient>
   );
 };

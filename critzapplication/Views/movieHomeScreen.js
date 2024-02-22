@@ -273,13 +273,13 @@ const movieHomeScreen = ({ navigation }) => {
       </ScrollView>
 
       <View style={styles.bottomNavBar}>
-        <TouchableOpacity onPress={() => console.log('Button 1')}>
+        <TouchableOpacity onPress={() => navigation.navigate('MoviesHome')}>
           <Icon name="home" size={screenWidth * 0.06} color="#FFF" />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => console.log('Button 2')}>
           <Icon name="search" size={screenWidth * 0.06} color="#FFF" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => console.log('Button 3')}>
+        <TouchableOpacity onPress={() => navigation.navigate('MainScreen')}>
           <Icon name="plus-circle" size={screenWidth * 0.06} color="#FFF" />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => console.log('Button 4')}>
