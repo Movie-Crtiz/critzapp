@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Button, TextInput, StyleSheet } from 'react-native';
 import axios from 'axios';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useUser } from './userContext';
 
 const loginScreen = ({ route, navigation }) => {
@@ -8,6 +9,8 @@ const loginScreen = ({ route, navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const primaryColor = '#00f'; // Blue (change as needed)
+  const secondaryColor = '#ff0'; // Yellow (change as needed)
 
   useEffect(() => {
     // Check if user is already logged in
@@ -57,24 +60,29 @@ const loginScreen = ({ route, navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text>Login</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={(text) => setEmail(text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={(text) => setPassword(text)}
-      />
-      {error ? <Text style={styles.errorText}>{error}</Text> : null}
-      <Button title="Login" onPress={handleNavigateQuiz} />
-    </View>
+    <LinearGradient
+      colors={[primaryColor, secondaryColor]}
+      style={styles.gradientBackground}
+    >
+      <View style={styles.container}>
+        <Text style={styles.title}>Login</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={(text) => setEmail(text)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          secureTextEntry
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+        />
+        {error ? <Text style={styles.errorText}>{error}</Text> : null}
+        <Button title="Login" onPress={handleNavigateQuiz} />
+      </View>
+    </LinearGradient>
   );
 };
 
@@ -84,6 +92,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  gradient: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'white',
+    marginBottom: 20,
+  },
   input: {
     height: 40,
     width: '80%',
@@ -91,6 +110,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 20,
     paddingLeft: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.7)', // Semi-transparent white
   },
   errorText: {
     color: 'red',

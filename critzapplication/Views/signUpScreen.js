@@ -3,7 +3,7 @@ import { Alert, Pressable, SafeAreaView, StyleSheet, Switch, Text, TextInput, To
 import { Feather } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
-
+import { Image } from 'react-native';
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 
@@ -102,8 +102,10 @@ export default function signUpScreen() {
     }
   };
 
-    const primaryColor = '#423378'; // Minsk
-    const secondaryColor = '#F2BDA1'; // Mandys Pink
+    const primaryColor = '#000'; 
+    const secondaryColor = '#000000'; 
+    const textColor = '#ffffff';
+
 
     const styles = StyleSheet.create({
         gradientBackground: {
@@ -155,7 +157,7 @@ export default function signUpScreen() {
             height: 100,
         },
         title: {
-            fontSize: 30,
+            fontSize: 25 ,
             fontWeight: 'bold',
             marginBottom: 20,
             color: 'white',
@@ -167,7 +169,7 @@ export default function signUpScreen() {
         input: {
             height: 50,
             width: 300,
-            borderColor: secondaryColor,
+            borderColor: textColor,
             borderWidth: 3,
             marginBottom: 10,
             paddingLeft: 50,
@@ -178,7 +180,7 @@ export default function signUpScreen() {
             position: 'absolute',
             top: 15,
             left: 15,
-            color: secondaryColor,
+            color: textColor,
         },
         rememberView: {
             flexDirection: 'row',
@@ -205,7 +207,7 @@ export default function signUpScreen() {
             width: '100%',
         },
         button: {
-            backgroundColor: '#26A0AE',
+            backgroundColor: '#A5232C',
             padding: 15,
             borderRadius: 10,
             alignItems: 'center',
@@ -237,12 +239,17 @@ export default function signUpScreen() {
         backButton: {
             position: 'absolute',
             top: 60,
-            left: -15,
+            left: -5,
            
         },
         backIcon: {
             color: 'white',
             fontSize: 24,
+        },
+        image: {
+            width: 180, 
+            height: 230, 
+            marginBottom: 20, 
         },
     });
 
@@ -265,6 +272,11 @@ export default function signUpScreen() {
                 </TouchableOpacity>
 
                 <Text style={styles.title}>Welcome New User!</Text>
+                <Image
+                source={require('../assets/Popcorns-bro.png')}
+                style={styles.image}
+               
+            />
                 <View style={styles.inputView}>
                     <Feather name="user" size={24} style={styles.icon} />
                     <TextInput
