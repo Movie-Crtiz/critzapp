@@ -282,9 +282,9 @@ const MovieFavoriteScreen = ({ navigation }) => {
           <Icon name="search" size={screenWidth * 0.06} color="#FFF" />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('MainScreen')}>
-          <Icon name="plus-circle" size={screenWidth * 0.06} color="#FFF" />
+          <Icon name="gamepad" size={screenWidth * 0.06} color="#FFF" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('MainScreen')}>
+        <TouchableOpacity onPress={() => navigation.navigate('MovieFavorite')}>
           <Icon name="heart" size={screenWidth * 0.06} color="#FFF" />
         </TouchableOpacity>
       </View>
