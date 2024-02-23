@@ -13,9 +13,9 @@ import AuthScreen from './Views/AuthScreen';
 import firebaseApp from './firebaseConfig';
 import signUpScreen from './Views/signUpScreen';
 import mainScreen from './Views/mainScreen';
-import MovieHomeScreen from './Views/movieHomeScreen';
-import MovieDetailScreen from './Views/movieDetailScreen';
-import MovieReviewScreen from './Views/movieReviewScreen';
+import MovieHomeScreen from './Views/MovieHomeScreen';
+import MovieDetailScreen from './Views/MovieDetailScreen';
+import MovieReviewScreen from './Views/MovieReviewScreen';
 import MovieFavoriteScreen from './Views/MovieFavoriteScreen';
 import MovieSearchScreen from "./Views/MovieSearchScreen";
 function SplashScreen({ navigation }) {
