@@ -252,18 +252,10 @@ const MovieFavoriteScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <ScrollView style={styles.content}>
-        <View style={styles.navBar}>
-          <TouchableOpacity onPress={() => navigation.navigate('MoviesHome')}>
-            <Icon name="arrow-left" size={screenWidth * 0.06} color="#FFF" />
-          </TouchableOpacity>
-          <Text style={styles.title}>Favorites</Text>
-          <TouchableOpacity onPress={() => toggleRecording()}>
-            <Icon name="microphone" size={screenWidth * 0.06} color="#FFF" />
-          </TouchableOpacity>
-        </View>
+        
 
         <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Favorites</Text>
+       
           <FlatList
             data={favoriteMovies}
             renderItem={renderFavoriteItem}
@@ -278,7 +270,7 @@ const MovieFavoriteScreen = ({ navigation }) => {
         <TouchableOpacity onPress={() => navigation.navigate('MoviesHome')}>
           <Icon name="home" size={screenWidth * 0.06} color="#FFF" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => console.log('Button 2')}>
+        <TouchableOpacity onPress={() => navigation.navigate('MovieSearch')}>
           <Icon name="search" size={screenWidth * 0.06} color="#FFF" />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('MainScreen')}>

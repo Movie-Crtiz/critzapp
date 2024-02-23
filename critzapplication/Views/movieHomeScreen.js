@@ -314,7 +314,7 @@ const MovieHomeScreen = ({ navigation }) => {
         <TouchableOpacity onPress={() => navigation.navigate('MoviesHome')}>
           <Icon name="home" size={screenWidth * 0.06} color="#FFF" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => console.log('Button 2')}>
+        <TouchableOpacity onPress={() => navigation.navigate('MovieSearch')}>
           <Icon name="search" size={screenWidth * 0.06} color="#FFF" />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('MainScreen')}>

@@ -52,20 +52,7 @@ const MovieDetailScreen = ({ route, navigation }) => {
           <Text style={styles.addButtonTitle}>Add a Review</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.bottomNavBar}>
-        <TouchableOpacity onPress={() => navigation.navigate('MoviesHome')}>
-          <Icon name="home" size={screenWidth * 0.06} color="#FFF" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => console.log('Button 2')}>
-          <Icon name="search" size={screenWidth * 0.06} color="#FFF" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('MainScreen')}>
-          <Icon name="gamepad" size={screenWidth * 0.06} color="#FFF" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('MovieFavorite')}>
-          <Icon name="heart" size={screenWidth * 0.06} color="#FFF" />
-        </TouchableOpacity>
-      </View>
+      
     </View>
   );
 };
