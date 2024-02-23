@@ -16,6 +16,7 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import mainScreen from "./mainScreen";
+import { Image } from 'react-native';
 
 import {
   Alert,
@@ -58,8 +59,8 @@ const AuthScreen = () => {
   const [authMessage, setAuthMessage] = useState("");
   const { userData, login } = useUser();
 
-  const primaryColor = "#423378"; // Minsk
-  const secondaryColor = "#F2BDA1"; // Mandys Pink
+  const primaryColor = "#000"; // Minsk
+  const secondaryColor = "#000"; // Mandys Pink
 
   const styles = StyleSheet.create({
     gradientBackground: {
@@ -123,7 +124,7 @@ const AuthScreen = () => {
     input: {
       height: 50,
       width: 300,
-      borderColor: secondaryColor,
+      borderColor: 'white',
       borderWidth: 3,
       marginBottom: 10,
       paddingLeft: 50,
@@ -134,7 +135,7 @@ const AuthScreen = () => {
       position: "absolute",
       top: 15,
       left: 15,
-      color: secondaryColor,
+      color: 'white',
     },
     rememberView: {
       flexDirection: "row",
@@ -161,7 +162,7 @@ const AuthScreen = () => {
       width: "100%",
     },
     button: {
-      backgroundColor: "#26A0AE",
+      backgroundColor: "#A5232C",
       padding: 15,
       borderRadius: 10,
       alignItems: "center",
@@ -200,6 +201,11 @@ const AuthScreen = () => {
       color: "white",
       fontSize: 24,
     },
+    image: {
+      width: 300, 
+      height: 250, 
+      marginBottom: 20, 
+  },
   });
 
   useEffect(() => {
@@ -271,8 +277,14 @@ const AuthScreen = () => {
                 </TouchableOpacity>
 
         <Text style={styles.title}>Welcome Back!</Text>
+        <Image
+                source={require('../assets/Popcorns-bro.png')}
+                style={styles.image}
+               
+            />
         <View style={styles.inputView}>
           <Feather name="user" size={24} style={styles.icon} />
+       
           <TextInput
             style={styles.input}
             placeholderTextColor="white"

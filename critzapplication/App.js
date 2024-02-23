@@ -6,27 +6,18 @@ import QuizScreen from "./Views/QuizScreen";
 import ResultScreen from "./Views/ResultScreen";
 //import HomeScreen from "./Views/homeScreen";
 import LeaderboardScreen from "./Views/LeaderboardScreen";
-import initialScreen from "./Views/initialScreen";
-import { StatusBar } from "expo-status-bar";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  Image,
-  TouchableOpacity,
-} from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
-import AuthScreen from "./Views/AuthScreen";
-import firebaseApp from "./firebaseConfig";
-import signUpScreen from "./Views/signUpScreen";
-import mainScreen from "./Views/mainScreen";
-import MovieHomeScreen from "./Views/MovieHomeScreen";
-import MovieDetailScreen from "./Views/MovieDetailScreen";
-import MovieReviewScreen from "./Views/MovieReviewScreen";
-import MovieFavoriteScreen from "./Views/MovieFavoriteScreen";
+import initialScreen from './Views/initialScreen';
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View, Button, Image} from 'react-native';
+import AuthScreen from './Views/AuthScreen';
+import firebaseApp from './firebaseConfig';
+import signUpScreen from './Views/signUpScreen';
+import mainScreen from './Views/mainScreen';
+import MovieHomeScreen from './Views/movieHomeScreen';
+import MovieDetailScreen from './Views/movieDetailScreen';
+import MovieReviewScreen from './Views/movieReviewScreen';
+import MovieFavoriteScreen from './Views/MovieFavoriteScreen';
 import MovieSearchScreen from "./Views/MovieSearchScreen";
-
 function SplashScreen({ navigation }) {
   React.useEffect(() => {
     const splashTimer = setTimeout(() => {
@@ -39,8 +30,8 @@ function SplashScreen({ navigation }) {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Image
-        source={require("./assets/splash.jpeg")}
-        style={{ width: 120, height: 120, borderRadius: 10 }}
+        source={require('./assets/splash.jpg')}
+        style={{ width: 120, height: 120, borderRadius: 10 }} 
       />
     </View>
   );
