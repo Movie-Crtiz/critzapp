@@ -141,17 +141,15 @@ options={({ navigation }) => ({
           <Stack.Screen
             name="Leaderboard"
             component={LeaderboardScreen}
-            options={{
-              headerStyle: {
-                backgroundColor: "#423378", // Change to your desired header color
-              },
-              headerTitleStyle: {
-                color: "white", // Change to your desired title color
-              },
-              headerTitleAlign: "center",
+            options={({ navigation }) => ({
               headerShown: true,
-              headerTintColor: "white",
-            }}
+              headerTitle: "Leaderboard",
+              headerStyle: {
+                backgroundColor: "#333",
+              },
+              headerTintColor: "#FFF",
+            } 
+          )}
           />
           <Stack.Screen
             name="Result"
