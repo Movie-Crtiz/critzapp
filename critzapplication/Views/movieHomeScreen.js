@@ -158,15 +158,15 @@ const MovieHomeScreen = ({ navigation }) => {
     if (command) {
       const lowercaseCommand = command.toLowerCase();
     if (lowercaseCommand.includes('search')) {
-      navigation.navigate('MovieSearchScreen');
+      navigation.navigate('MovieSearch');
     } else if (lowercaseCommand.includes('favorite')) {
-      navigation.navigate('FavoriteMoviesScreen');
+      navigation.navigate('MovieFavorite');
     } else if (lowercaseCommand.includes('game')) {
       navigation.navigate("Quiz")
     } else if (lowercaseCommand.includes('leaderboard')) {
       navigation.navigate("Leaderboard")
     } else if (lowercaseCommand.includes('logout')) {
-      logout(); // Assuming this function exists to handle logout
+     // logout(); // Assuming this function exists to handle logout
       navigation.navigate('Initial');     
     } else if (lowercaseCommand.includes('review')) {
       navigation.navigate('MovieReview');
@@ -185,26 +185,26 @@ const MovieHomeScreen = ({ navigation }) => {
     }
   }else{
     console.log('count : ',count)
-    if (count === 5) {
+    if (count === 3) {
       setCount(Count => Count + 1);
       console.log('count : ',count)
-      navigation.navigate('MovieSearchScreen');
-    } else if (count === 4) {
-      setCount(Count => Count + 1);
-      console.log('count : ',count)
-      navigation.navigate('FavoriteMoviesScreen');
+      navigation.navigate('MovieSearch');
     } else if (count === 2) {
       setCount(Count => Count + 1);
       console.log('count : ',count)
+      navigation.navigate('MovieFavorite');
+    } else if (count === 4) {
+      setCount(Count => Count + 1);
+      console.log('count : ',count)
       navigation.navigate("Quiz")
-    } else if (count === 3) {
+    } else if (count === 5) {
       setCount(Count => Count + 1);
       console.log('count : ',count)
       navigation.navigate("Leaderboard")
     } else if (count === 6) {
-      setCount(Count => Count + 1);
+      setCount(0);
       console.log('count : ',count)
-      logout();
+      //logout();
       navigation.navigate('Initial');     
     } else if (count === 1) {
       setCount(Count => Count + 1);

@@ -112,7 +112,7 @@ const mainScreen = () => {
       textAlign: "center",
     },
     buttonsContainer: {
-      backgroundColor: "#26A0AE",
+      backgroundColor: "#A5232C",
       paddingVertical: 15,
       paddingHorizontal: 30,
       borderRadius: 10,

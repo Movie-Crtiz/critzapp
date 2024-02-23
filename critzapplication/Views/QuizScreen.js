@@ -288,12 +288,12 @@ const QuizScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
-    backgroundColor: "#423378",
+    backgroundColor: "#000000",
     alignItems: "center",
   },
   contentContainer: {
     flex: 1,
-    backgroundColor: "#423378",
+    backgroundColor: "#000000",
     alignItems: "center",
     paddingTop: 80,
   },
