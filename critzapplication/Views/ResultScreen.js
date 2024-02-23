@@ -10,9 +10,8 @@ import { API_BASE_URL } from "../config";
 const ResultScreen = ({ route, navigation }) => {
   const { score } = route.params;
   const { userData } = useUser();
-
-  const primaryColor = "#423378"; // Minsk
-  const secondaryColor = "#F2BDA1"; // Mandys Pink
+  const primaryColor = "black"; // Minsk
+  const secondaryColor = "#A5232C"; // Mandys Pink
 
   const user = {
     name: "John Doe",

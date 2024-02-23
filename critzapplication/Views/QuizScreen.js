@@ -26,8 +26,8 @@ const QuizScreen = ({ navigation }) => {
 
   const [totalQuestions, setTotalQuestions] = useState(0);
 
-  const primaryColor = "#423378"; // Minsk
-  const secondaryColor = "#F2BDA1"; // Mandys Pink
+  const primaryColor = "black"; // Minsk
+  const secondaryColor = "#A5232C"; // Mandys Pink
   const shadowColor = "#C48F7A";
   const countdownRef = useRef(null);
 

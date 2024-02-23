@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Button,
+  Dimensions
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Title, Paragraph } from "react-native-paper";
@@ -14,13 +15,18 @@ import { useNavigation } from "@react-navigation/native";
 import { useUser } from "./userContext";
 import VoiceRecognition from "../Models/VoiceRecognition";
 import * as Speech from "expo-speech-recognition";
+import Icon from 'react-native-vector-icons/FontAwesome';
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+const carouselWidth = screenWidth * 0.9; 
+const movieItemWidth = screenWidth * 0.4; 
 
 const mainScreen = () => {
   const navigation = useNavigation();
   const { userData } = useUser();
   const [user, setUser] = useState(null);
-  const primaryColor = "#423378"; // Minsk
-  const secondaryColor = "#F2BDA1"; // Mandys Pink
+  const primaryColor = "black"; // Minsk
+  const secondaryColor = "#A5232C"; // Mandys Pink
   const shadowColor = "#C48F7A"; // Shadow color for the decorative circle
   const voiceRecognition = new VoiceRecognition(navigation);
 
@@ -29,6 +35,26 @@ const mainScreen = () => {
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
+    },
+    navBar: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      backgroundColor: '#000',
+      paddingHorizontal: screenWidth * 0.05,
+      paddingTop: screenHeight * 0.03,
+      paddingBottom: screenHeight * 0.015,
+    },
+    bottomNavBar: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      alignItems: 'center',
+      backgroundColor: '#000',
+      paddingVertical: screenHeight * 0.015,
     },
     gradient: {
       flex: 1,
@@ -286,7 +312,22 @@ const mainScreen = () => {
       >
         <Text style={styles.buttonText}>Start Quiz</Text>
       </TouchableOpacity>
+      <View style={styles.bottomNavBar}>
+        <TouchableOpacity onPress={() => navigation.navigate('MoviesHome')}>
+          <Icon name="home" size={screenWidth * 0.06} color="#FFF" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => console.log('MovieSearch')}>
+          <Icon name="search" size={screenWidth * 0.06} color="#FFF" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('MainScreen')}>
+          <Icon name="gamepad" size={screenWidth * 0.06} color="#FFF" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('MovieFavorite')}>
+          <Icon name="heart" size={screenWidth * 0.06} color="#FFF" />
+        </TouchableOpacity>
+      </View>
     </LinearGradient>
+    
   );
 };
 

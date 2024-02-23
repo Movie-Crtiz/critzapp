@@ -12,8 +12,8 @@ const LeaderboardScreen = () => {
   const [currentUserRank, setCurrentUserRank] = useState(0);
   const [members, setMembers] = useState({});
 
-  const primaryColor = "#423378"; // Minsk
-  const secondaryColor = "#F2BDA1"; // Mandys Pink
+  const primaryColor = "black"; // Minsk
+  const secondaryColor = "#A5232C"; // Mandys Pink
 
   useEffect(() => {
     const fetchData = async () => {
