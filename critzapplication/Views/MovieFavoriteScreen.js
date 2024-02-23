@@ -12,19 +12,14 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const carouselWidth = screenWidth * 0.9; 
 const movieItemWidth = screenWidth * 0.4; 
 
-const MovieHomeScreen = ({ navigation }) => {
-  const trendingMovies = [
-    { id: '1', title: 'Movie Title 1', rating: 4.5, imageUrl: require('../assets/Movie.png') },
-    { id: '2', title: 'Movie Title 2', rating: 3.8, imageUrl: require('../assets/Movie.png') },
-    { id: '3', title: 'Movie Title 3', rating: 4.2, imageUrl: require('../assets/Movie.png') },
-  ];
+const MovieFavoriteScreen = ({ navigation }) => {
 
   const [activeDotIndex, setActiveDotIndex] = useState(0); 
 
-  const topRatedMovies = [
-    { id: '1', title: 'Top Rated Movie 1', imageUrl: require('../assets/Movie.png'), description: 'Description of top rated movie 1', rating: 4.5 },
-    { id: '2', title: 'Top Rated Movie 2', imageUrl: require('../assets/Movie.png'), description: 'Description of top rated movie 2', rating: 3.8 },
-    { id: '3', title: 'Top Rated Movie 3', imageUrl: require('../assets/Movie.png'), description: 'Description of top rated movie 3', rating: 4.2 },
+  const favoriteMovies = [
+    { id: '1', title: 'Favorite Movie 1', imageUrl: require('../assets/Movie.png'), description: 'Description of Favorite Movie 1', rating: 4.5 },
+    { id: '2', title: 'Favorite Movie 2', imageUrl: require('../assets/Movie.png'), description: 'Description of Favorite Movie 2', rating: 3.8 },
+    { id: '3', title: 'Favorite Movie 3', imageUrl: require('../assets/Movie.png'), description: 'Description of Favorite Movie 3', rating: 4.2 },
   ];
 
   const [recording, setRecording] = useState(null); // Initialize with null
@@ -236,17 +231,8 @@ const MovieHomeScreen = ({ navigation }) => {
     return foundMovie;
   };
 
-  const renderMovieItem = ({ item }) => (
-    <TouchableOpacity
-      style={styles.movieItem}
-      onPress={() => navigation.navigate('MovieDetail', { movie: item })}
-    >
-      <Image style={styles.moviePoster} source={item.imageUrl} />
-      <Text style={styles.movieTitle} numberOfLines={2}>{item.title}</Text>
-    </TouchableOpacity>
-  );
 
-  const renderTopRatedItem = ({ item }) => (
+  const renderFavoriteItem = ({ item }) => (
     <TouchableOpacity
       style={styles.topRatedItem}
       onPress={() => navigation.navigate('MovieDetail', { movie: item })}
@@ -267,47 +253,25 @@ const MovieHomeScreen = ({ navigation }) => {
     <View style={styles.container}>
       <ScrollView style={styles.content}>
         <View style={styles.navBar}>
-          <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-            <Icon name="user" size={screenWidth * 0.06} color="#FFF" />
+          <TouchableOpacity onPress={() => navigation.navigate('MoviesHome')}>
+            <Icon name="arrow-left" size={screenWidth * 0.06} color="#FFF" />
           </TouchableOpacity>
-          <Text style={styles.title}>Movie Critz</Text>
+          <Text style={styles.title}>Favorites</Text>
           <TouchableOpacity onPress={() => toggleRecording()}>
             <Icon name="microphone" size={screenWidth * 0.06} color="#FFF" />
           </TouchableOpacity>
         </View>
 
         <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Trending Now</Text>
-          <Carousel
-            data={trendingMovies}
-            renderItem={renderMovieItem}
-            sliderWidth={carouselWidth}
-            itemWidth={movieItemWidth}
-            loop
-            autoplay
-            autoplayInterval={3000}
-            onSnapToItem={(index) => setActiveDotIndex(index)}
-          />
-          <Pagination
-            dotsLength={trendingMovies.length}
-            activeDotIndex={activeDotIndex}
-            containerStyle={styles.paginationContainer}
-            dotStyle={styles.paginationDot}
-            inactiveDotStyle={styles.paginationInactiveDot}
-            inactiveDotOpacity={0.4}
-            inactiveDotScale={0.6}
-          />
-        </View>
-
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Top Rated</Text>
+          <Text style={styles.sectionTitle}>Favorites</Text>
           <FlatList
-            data={topRatedMovies}
-            renderItem={renderTopRatedItem}
+            data={favoriteMovies}
+            renderItem={renderFavoriteItem}
             keyExtractor={(item) => item.id}
             showsVerticalScrollIndicator={false}
           />
         </View>
+
       </ScrollView>
 
       <View style={styles.bottomNavBar}>
@@ -320,7 +284,7 @@ const MovieHomeScreen = ({ navigation }) => {
         <TouchableOpacity onPress={() => navigation.navigate('MainScreen')}>
           <Icon name="plus-circle" size={screenWidth * 0.06} color="#FFF" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('MovieFavorite')}>
+        <TouchableOpacity onPress={() => navigation.navigate('MainScreen')}>
           <Icon name="heart" size={screenWidth * 0.06} color="#FFF" />
         </TouchableOpacity>
       </View>
@@ -440,4 +404,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MovieHomeScreen;
+export default MovieFavoriteScreen;

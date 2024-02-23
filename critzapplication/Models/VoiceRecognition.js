@@ -50,7 +50,7 @@ const VoiceRecognition = ({ navigation }) => {
     if (lowercaseCommand.includes('search')) {
       navigation.navigate('MovieSearchScreen');
     } else if (lowercaseCommand.includes('favorite')) {
-      navigation.navigate('FavoriteMoviesScreen');
+      navigation.navigate('FavoriteMovieScreen');
     } else if (lowercaseCommand.includes('trivia')) {
       navigation.navigate('TriviaGameScreen');
     } else if (lowercaseCommand.includes('leaderboard')) {

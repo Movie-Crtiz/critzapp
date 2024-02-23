@@ -6,7 +6,7 @@ import axios from 'axios';
 import * as FileSystem from 'expo-file-system';
 import * as Permissions from 'expo-permissions';
 
-const ReviewScreen = () => {
+const MovieReviewScreen = () => {
   const [recording, setRecording] = useState(null); // Initialize with null
   const [isRecording, setIsRecording] = useState(false);
   const [audioPermission, setAudioPermission] = useState(null);
@@ -235,4 +235,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ReviewScreen;
+export default MovieReviewScreen;
