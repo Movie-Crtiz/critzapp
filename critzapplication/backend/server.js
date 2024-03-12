@@ -6,6 +6,8 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const memberRoutes = require("./routes/memberRoutes");
 const scoreRoutes = require('./routes/scoreRoutes');
+const movieRoutes = require("./routes/movieRoutes");
+const favoriteRoutes = require('./routes/userFavoriteRoutes');
 
 dotenv.config();
 
@@ -32,6 +34,8 @@ db.once("open", () => {
 // Routes
 app.use(memberRoutes);
 app.use(scoreRoutes);
+app.use(movieRoutes);
+app.use(favoriteRoutes);
 
 // Default route
 app.get("/", (req, res) => {
