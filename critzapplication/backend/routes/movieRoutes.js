@@ -5,8 +5,8 @@ const movieController = require('../Controllers/movieController');
 // Routes
 router.post('/movies', async (req, res) => {
   try {
-    const { title, releaseDate, genre, director,description,trailerUrl,topRated} = req.body;
-    const movie = await movieController.createMovie(title, releaseDate, genre, director,description,trailerUrl,topRated);
+    const { title, releaseDate, genre, director,description,trailerUrl,topRated ,bannerUrl } = req.body;
+    const movie = await movieController.createMovie(title, releaseDate, genre, director,description,trailerUrl,topRated,bannerUrl);
     res.json(movie);
   } catch (error) {
     res.status(500).json({ error: error.message });

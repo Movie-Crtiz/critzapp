@@ -1,9 +1,9 @@
 const Movie = require('../Models/movieModel');
 
 // Controller functions
-const createMovie = async (title, releaseDate, genre, director,description,trailerUrl,topRated) => {
+const createMovie = async (title, releaseDate, genre, director,description,trailerUrl,topRated ,bannerUrl ) => {
   try {
-    const movie = await Movie.create({ title, releaseDate, genre, director,description,trailerUrl ,topRated});
+    const movie = await Movie.create({ title, releaseDate, genre, director,description,trailerUrl ,topRated,bannerUrl });
     return movie;
   } catch (error) {
     console.error('Error creating movie:', error);

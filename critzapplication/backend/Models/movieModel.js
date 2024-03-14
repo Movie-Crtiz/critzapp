@@ -27,6 +27,11 @@ const movieSchema = new mongoose.Schema({
   topRated : {
     type: Boolean,
   },
+  bannerUrl  : {
+    type: String,
+    required: true,
+    unique: true,
+  },
 });
 
 const Movie = mongoose.model('Movie', movieSchema);
