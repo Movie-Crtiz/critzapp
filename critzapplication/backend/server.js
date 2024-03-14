@@ -8,6 +8,7 @@ const memberRoutes = require("./routes/memberRoutes");
 const scoreRoutes = require('./routes/scoreRoutes');
 const movieRoutes = require("./routes/movieRoutes");
 const favoriteRoutes = require('./routes/userFavoriteRoutes');
+const reviewoutes = require("./routes/reviewRoutes");
 
 dotenv.config();
 
@@ -36,6 +37,7 @@ app.use(memberRoutes);
 app.use(scoreRoutes);
 app.use(movieRoutes);
 app.use(favoriteRoutes);
+app.use(reviewoutes);
 
 // Default route
 app.get("/", (req, res) => {

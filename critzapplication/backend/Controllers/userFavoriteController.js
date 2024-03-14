@@ -1,4 +1,4 @@
-const UserFavorite = require('../models/userFavorite');
+const UserFavorite = require('../Models/userFavoriteModel');
 
 const addUserFavorite = async (userId, movieId) => {
   try {

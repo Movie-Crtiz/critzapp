@@ -13,6 +13,6 @@ const userFavoriteSchema = new mongoose.Schema({
   },
 });
 
-const UserFavorite = mongoose.model('UserFavorites', userFavoriteSchema);
+const UserFavorite = mongoose.model('UserFavorite', userFavoriteSchema);
 
 module.exports = UserFavorite;

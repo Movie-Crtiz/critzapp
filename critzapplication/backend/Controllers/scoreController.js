@@ -1,4 +1,4 @@
-const Score = require('../models/scoreModel');
+const Score = require('../Models/scoreModel');
 
 const addScore = async (playerId, score) => {
   try {

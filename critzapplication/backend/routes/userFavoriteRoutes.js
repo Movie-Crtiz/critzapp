@@ -5,8 +5,8 @@ const userFavoriteController = require('../Controllers/userFavoriteController');
 // Routes
 router.post('/userFavorites', async (req, res) => {
   try {
-    const { userId, moviewId } = req.body;
-    const newUserFavorite = await userFavoriteController.addUserFavorite(userId, moviewId);
+    const { userId, movieId } = req.body;
+    const newUserFavorite = await userFavoriteController.addUserFavorite(userId, movieId);
     res.json(newUserFavorite);
   } catch (error) {
     res.status(500).json({ error: error.message });
