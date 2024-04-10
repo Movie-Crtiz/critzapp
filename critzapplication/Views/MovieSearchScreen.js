@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, FlatList, Dimensions, Alert, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, Button, StyleSheet, Image, TouchableOpacity, ScrollView, FlatList, Dimensions, Alert, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import axios from 'axios';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 const MovieSearchScreen = ({ navigation }) => {
   const [searchText, setSearchText] = useState('');
   const [isFocused, setIsFocused] = useState(false);
+  const [inputText, setInputText] = useState('');
+  const [responseText, setResponseText] = useState('');
 
   const handleFocus = () => {
     setIsFocused(true);
@@ -14,6 +17,29 @@ const MovieSearchScreen = ({ navigation }) => {
 
   const handleBlur = () => {
     setIsFocused(false);
+  };
+
+  const handleGenerateResponse = async () => {
+    try {
+      const response = await axios.post(
+        'https://api.openai.com/v1/completions',
+        {
+          model: 'text-davinci-003', // Specify the model to use (e.g., "text-davinci-003" for ChatGPT)
+          prompt: inputText, // Text to generate a response for
+          max_tokens: 150 // Maximum length of the generated response
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer YOUR_API_KEY' // Replace YOUR_API_KEY with your actual API key
+          }
+        }
+      );
+      
+      setResponseText(response.data.choices[0].text.trim());
+    } catch (error) {
+      console.error('Error generating response:', error);
+    }
   };
 
   return (
@@ -32,6 +58,21 @@ const MovieSearchScreen = ({ navigation }) => {
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
+      </View>
+
+      <View style={styles.searchContainer}>
+        <Icon name="search" size={20} color="#FFF" style={styles.searchIcon} />
+        <TextInput
+          placeholder="Enter your message..."
+          placeholderTextColor="#999"
+          style={styles.searchInput}
+          onChangeText={(text) => setSearchText(text)}
+          value={searchText}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
+        <Button title="Send" onPress={handleGenerateResponse} />
+      {responseText ? <Text>{responseText}</Text> : null}
       </View>
 
       <View style={styles.imageContainer}>
