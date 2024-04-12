@@ -1,37 +1,120 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, FlatList, Dimensions, Alert } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Carousel, { Pagination } from 'react-native-snap-carousel';
-import { Audio } from 'expo-av';
-import * as Speech from 'expo-speech';
-import axios from 'axios';
-import * as FileSystem from 'expo-file-system';
-import * as Permissions from 'expo-permissions';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  FlatList,
+  Dimensions,
+  Alert,
+} from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome";
+import Carousel, { Pagination } from "react-native-snap-carousel";
+import { Audio } from "expo-av";
+import * as Speech from "expo-speech";
+import axios from "axios";
+import * as FileSystem from "expo-file-system";
+import * as Permissions from "expo-permissions";
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-const carouselWidth = screenWidth * 0.9; 
-const movieItemWidth = screenWidth * 0.4; 
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
+const carouselWidth = screenWidth * 0.9;
+const movieItemWidth = screenWidth * 0.4;
 
 const MovieHomeScreen = ({ navigation }) => {
   const trendingMovies = [
-    { id: '1', title: 'Movie Title 1', rating: 4.5, imageUrl: require('../assets/Movie.png') },
-    { id: '2', title: 'Movie Title 2', rating: 3.8, imageUrl: require('../assets/Movie.png') },
-    { id: '3', title: 'Movie Title 3', rating: 4.2, imageUrl: require('../assets/Movie.png') },
+    {
+      id: "1",
+      title: "Movie Title 1",
+      rating: 4.5,
+      imageUrl: require("../assets/Movie.png"),
+      mood: "Feel-Good",
+    },
+    {
+      id: "2",
+      title: "Movie Title 2",
+      rating: 3.8,
+      imageUrl: require("../assets/Movie.png"),
+      mood: "Thriller",
+    },
+    {
+      id: "3",
+      title: "Movie Title 3",
+      rating: 4.2,
+      imageUrl: require("../assets/Movie.png"),
+      mood: "Romantic",
+    },
+    {
+      id: "4",
+      title: "Movie Title 4",
+      rating: 4.1,
+      imageUrl: require("../assets/Movie.png"),
+      mood: "Rainy Day",
+    },
+    {
+      id: "5",
+      title: "Movie Title 5",
+      rating: 4.3,
+      imageUrl: require("../assets/Movie.png"),
+      mood: "Christmas",
+    },
+    {
+      id: "6",
+      title: "Movie Title 6",
+      rating: 3.9,
+      imageUrl: require("../assets/Movie.png"),
+      mood: "Feel-Good",
+    },
+    {
+      id: "7",
+      title: "Movie Title 7",
+      rating: 4.0,
+      imageUrl: require("../assets/Movie.png"),
+      mood: "Thriller",
+    },
+    {
+      id: "8",
+      title: "Movie Title 8",
+      rating: 4.4,
+      imageUrl: require("../assets/Movie.png"),
+      mood: "Romantic",
+    },
   ];
 
-  const [activeDotIndex, setActiveDotIndex] = useState(0); 
+  const [activeDotIndex, setActiveDotIndex] = useState(0);
 
   const topRatedMovies = [
-    { id: '1', title: 'Top Rated Movie 1', imageUrl: require('../assets/Movie.png'), description: 'Description of top rated movie 1', rating: 4.5 },
-    { id: '2', title: 'Top Rated Movie 2', imageUrl: require('../assets/Movie.png'), description: 'Description of top rated movie 2', rating: 3.8 },
-    { id: '3', title: 'Top Rated Movie 3', imageUrl: require('../assets/Movie.png'), description: 'Description of top rated movie 3', rating: 4.2 },
+    {
+      id: "1",
+      title: "Top Rated Movie 1",
+      imageUrl: require("../assets/Movie.png"),
+      description: "Description of top rated movie 1",
+      rating: 4.5,
+    },
+    {
+      id: "2",
+      title: "Top Rated Movie 2",
+      imageUrl: require("../assets/Movie.png"),
+      description: "Description of top rated movie 2",
+      rating: 3.8,
+    },
+    {
+      id: "3",
+      title: "Top Rated Movie 3",
+      imageUrl: require("../assets/Movie.png"),
+      description: "Description of top rated movie 3",
+      rating: 4.2,
+    },
   ];
 
   const [recording, setRecording] = useState(null); // Initialize with null
   const [isRecording, setIsRecording] = useState(false);
   const [audioPermission, setAudioPermission] = useState(null);
   const [count, setCount] = useState(0);
-
+  const [showFilterOptions, setShowFilterOptions] = useState(false);
+  const [filteredMovies, setFilteredMovies] = useState([]);
+  const [appliedFilter, setAppliedFilter] = useState(null);
   useEffect(() => {
     // Set the audio mode before starting recording
     Audio.setAudioModeAsync({
@@ -39,6 +122,13 @@ const MovieHomeScreen = ({ navigation }) => {
       playsInSilentModeIOS: true, // Optional
     });
   }, []);
+  const applyFilter = (mood) => {
+    const filteredMovies = trendingMovies.filter(
+      (movie) => movie.mood === mood
+    );
+    setAppliedFilter(mood);
+    setFilteredMovies(filteredMovies);
+  };
 
   useEffect(() => {
     getPermission();
@@ -55,16 +145,16 @@ const MovieHomeScreen = ({ navigation }) => {
     try {
       const { status } = await Audio.requestPermissionsAsync();
       setAudioPermission(status);
-      if (status !== 'granted') {
-        alert('Permission to access audio recording was denied');
+      if (status !== "granted") {
+        alert("Permission to access audio recording was denied");
       }
     } catch (error) {
-      console.error('Error requesting audio permission:', error);
+      console.error("Error requesting audio permission:", error);
     }
   };
 
   const toggleRecording = async () => {
-    if (audioPermission === 'granted') {
+    if (audioPermission === "granted") {
       if (isRecording) {
         // Stop recording
         try {
@@ -75,7 +165,7 @@ const MovieHomeScreen = ({ navigation }) => {
           const transcription = await convertAudioToText(uri);
           processVoiceCommand(transcription); // Update recorded text state
         } catch (err) {
-          console.error('Failed to stop recording', err);
+          console.error("Failed to stop recording", err);
         } finally {
           // Reset recording state after stopping
           setRecording(null);
@@ -87,49 +177,53 @@ const MovieHomeScreen = ({ navigation }) => {
             await recording.stopAndUnloadAsync();
           }
           const newRecording = new Audio.Recording();
-          const recordingStatus = await newRecording.prepareToRecordAsync(Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY);
+          const recordingStatus = await newRecording.prepareToRecordAsync(
+            Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
+          );
           if (recordingStatus.canRecord) {
             await newRecording.startAsync();
             setRecording(newRecording);
             setIsRecording(true);
           } else {
-            console.error('Failed to prepare recording:', recordingStatus.error);
+            console.error(
+              "Failed to prepare recording:",
+              recordingStatus.error
+            );
           }
         } catch (err) {
-          console.error('Failed to start recording', err);
+          console.error("Failed to start recording", err);
         }
       }
     } else {
       getPermission();
     }
   };
-  
 
   const convertAudioToText = async (audioUri) => {
     try {
-      console.log('audioUri:', audioUri);
+      console.log("audioUri:", audioUri);
       const base64AudioData = await convertAndSendAudio(audioUri);
       // console.log('base64AudioData:', base64AudioData);
 
       const response = await axios.post(
-        'https://speech.googleapis.com/v1/speech:recognize?key=',
+        "https://speech.googleapis.com/v1/speech:recognize?key=",
         {
           config: {
-            encoding: 'LINEAR16',
-          sampleRateHertz: 16000,
-          languageCode: 'en-US',
+            encoding: "LINEAR16",
+            sampleRateHertz: 16000,
+            languageCode: "en-US",
           },
           audio: {
             content: base64AudioData,
           },
         }
       );
-      console.error('response:', response.data.results[0]);
+      console.error("response:", response.data.results[0]);
       // Extract transcription from the response
-       const transcription = response.data.results[0].alternatives[0].transcript;
-       return transcription;
+      const transcription = response.data.results[0].alternatives[0].transcript;
+      return transcription;
     } catch (error) {
-      console.error('Failed to convert audio to text:', error);
+      console.error("Failed to convert audio to text:", error);
       return null;
     }
   };
@@ -139,99 +233,100 @@ const MovieHomeScreen = ({ navigation }) => {
       // Read the audio file from local storage
       const fileInfo = await FileSystem.getInfoAsync(fileUri);
       if (!fileInfo.exists) {
-        console.error('Audio file does not exist');
+        console.error("Audio file does not exist");
         return;
       }
 
       // Read the contents of the audio file
       const { uri } = fileInfo;
-      const audioBuffer = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 });
+      const audioBuffer = await FileSystem.readAsStringAsync(uri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
 
       // Send the audio data to the Speech-to-Text API
-     return audioBuffer;
+      return audioBuffer;
     } catch (error) {
-      console.error('Failed to convert and send audio', error);
+      console.error("Failed to convert and send audio", error);
     }
   };
 
-  const processVoiceCommand = (command) => {     
+  const processVoiceCommand = (command) => {
     if (command) {
       const lowercaseCommand = command.toLowerCase();
-    if (lowercaseCommand.includes('search')) {
-      navigation.navigate('MovieSearch');
-    } else if (lowercaseCommand.includes('favorite')) {
-      navigation.navigate('MovieFavorite');
-    } else if (lowercaseCommand.includes('game')) {
-      navigation.navigate("Quiz")
-    } else if (lowercaseCommand.includes('leaderboard')) {
-      navigation.navigate("Leaderboard")
-    } else if (lowercaseCommand.includes('logout')) {
-     // logout(); // Assuming this function exists to handle logout
-      navigation.navigate('Initial');     
-    } else if (lowercaseCommand.includes('review')) {
-      navigation.navigate('MovieReview');
-    }  else if (lowercaseCommand.includes('detail')) {
-      const foundMovie = findMovie('Movie Title 1');
-      if (foundMovie) {
-        navigation.navigate('MovieDetail', { movie: foundMovie });
-        console.log('Found Movie:', foundMovie);
+      if (lowercaseCommand.includes("search")) {
+        navigation.navigate("MovieSearch");
+      } else if (lowercaseCommand.includes("favorite")) {
+        navigation.navigate("MovieFavorite");
+      } else if (lowercaseCommand.includes("game")) {
+        navigation.navigate("Quiz");
+      } else if (lowercaseCommand.includes("leaderboard")) {
+        navigation.navigate("Leaderboard");
+      } else if (lowercaseCommand.includes("logout")) {
+        // logout(); // Assuming this function exists to handle logout
+        navigation.navigate("Initial");
+      } else if (lowercaseCommand.includes("review")) {
+        navigation.navigate("MovieReview");
+      } else if (lowercaseCommand.includes("detail")) {
+        const foundMovie = findMovie("Movie Title 1");
+        if (foundMovie) {
+          navigation.navigate("MovieDetail", { movie: foundMovie });
+          console.log("Found Movie:", foundMovie);
+        } else {
+          Alert.alert("Error", "Movie not found.");
+          console.log("Movie not found!");
+        }
       } else {
-        Alert.alert("Error", "Movie not found.");
-        console.log('Movie not found!');
-      }
-      
-    } else {
-      Alert.alert("Error", "Unrecognized command.");
-    }
-  }else{
-    console.log('count : ',count)
-    if (count === 3) {
-      setCount(Count => Count + 1);
-      console.log('count : ',count)
-      navigation.navigate('MovieSearch');
-    } else if (count === 2) {
-      setCount(Count => Count + 1);
-      console.log('count : ',count)
-      navigation.navigate('MovieFavorite');
-    } else if (count === 4) {
-      setCount(Count => Count + 1);
-      console.log('count : ',count)
-      navigation.navigate("Quiz")
-    } else if (count === 5) {
-      setCount(Count => Count + 1);
-      console.log('count : ',count)
-      navigation.navigate("Leaderboard")
-    } else if (count === 6) {
-      setCount(0);
-      console.log('count : ',count)
-      //logout();
-      navigation.navigate('Initial');     
-    } else if (count === 1) {
-      setCount(Count => Count + 1);
-      console.log('count : ',count)
-      navigation.navigate('MovieReview');
-    }  else if (count === 0) {
-      setCount(Count => Count + 1);
-      console.log('count : ',count)
-      const foundMovie = findMovie('Movie Title 1');
-      if (foundMovie) {
-        navigation.navigate('MovieDetail', { movie: foundMovie });
-        console.log('Found Movie:', foundMovie);
-      } else {
-        Alert.alert("Error", "Movie not found.");
-        console.log('Movie not found!');
+        Alert.alert("Error", "Unrecognized command.");
       }
     } else {
-      setCount(0); 
-      Alert.alert("Error", "Unrecognized command.");
+      console.log("count : ", count);
+      if (count === 3) {
+        setCount((Count) => Count + 1);
+        console.log("count : ", count);
+        navigation.navigate("MovieSearch");
+      } else if (count === 2) {
+        setCount((Count) => Count + 1);
+        console.log("count : ", count);
+        navigation.navigate("MovieFavorite");
+      } else if (count === 4) {
+        setCount((Count) => Count + 1);
+        console.log("count : ", count);
+        navigation.navigate("Quiz");
+      } else if (count === 5) {
+        setCount((Count) => Count + 1);
+        console.log("count : ", count);
+        navigation.navigate("Leaderboard");
+      } else if (count === 6) {
+        setCount(0);
+        console.log("count : ", count);
+        //logout();
+        navigation.navigate("Initial");
+      } else if (count === 1) {
+        setCount((Count) => Count + 1);
+        console.log("count : ", count);
+        navigation.navigate("MovieReview");
+      } else if (count === 0) {
+        setCount((Count) => Count + 1);
+        console.log("count : ", count);
+        const foundMovie = findMovie("Movie Title 1");
+        if (foundMovie) {
+          navigation.navigate("MovieDetail", { movie: foundMovie });
+          console.log("Found Movie:", foundMovie);
+        } else {
+          Alert.alert("Error", "Movie not found.");
+          console.log("Movie not found!");
+        }
+      } else {
+        setCount(0);
+        Alert.alert("Error", "Unrecognized command.");
+      }
     }
-  }
   };
 
   const findMovie = (title) => {
-    let foundMovie = trendingMovies.find(movie => movie.title === title);
+    let foundMovie = trendingMovies.find((movie) => movie.title === title);
     if (!foundMovie) {
-      foundMovie = topRatedMovies.find(movie => movie.title === title);
+      foundMovie = topRatedMovies.find((movie) => movie.title === title);
     }
     return foundMovie;
   };
@@ -239,21 +334,25 @@ const MovieHomeScreen = ({ navigation }) => {
   const renderMovieItem = ({ item }) => (
     <TouchableOpacity
       style={styles.movieItem}
-      onPress={() => navigation.navigate('MovieDetail', { movie: item })}
+      onPress={() => navigation.navigate("MovieDetail", { movie: item })}
     >
       <Image style={styles.moviePoster} source={item.imageUrl} />
-      <Text style={styles.movieTitle} numberOfLines={2}>{item.title}</Text>
+      <Text style={styles.movieTitle} numberOfLines={2}>
+        {item.title}
+      </Text>
     </TouchableOpacity>
   );
 
   const renderTopRatedItem = ({ item }) => (
     <TouchableOpacity
       style={styles.topRatedItem}
-      onPress={() => navigation.navigate('MovieDetail', { movie: item })}
+      onPress={() => navigation.navigate("MovieDetail", { movie: item })}
     >
       <Image style={styles.topRatedPoster} source={item.imageUrl} />
       <View style={styles.topRatedInfo}>
-        <Text style={styles.topRatedTitle} numberOfLines={1}>{item.title}</Text>
+        <Text style={styles.topRatedTitle} numberOfLines={1}>
+          {item.title}
+        </Text>
         <Text style={styles.topRatedDescription}>{item.description}</Text>
         <View style={styles.ratingContainer}>
           <Icon name="star" size={16} color="#FFD700" />
@@ -267,7 +366,7 @@ const MovieHomeScreen = ({ navigation }) => {
     <View style={styles.container}>
       <ScrollView style={styles.content}>
         <View style={styles.navBar}>
-          <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+          <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
             <Icon name="user" size={screenWidth * 0.06} color="#FFF" />
           </TouchableOpacity>
           <Text style={styles.title}>Movie Critz</Text>
@@ -277,9 +376,35 @@ const MovieHomeScreen = ({ navigation }) => {
         </View>
 
         <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Trending Now</Text>
+          <View style={styles.headerContainer}>
+            <Text style={styles.sectionTitle}>Trending Now</Text>
+            <TouchableOpacity
+              onPress={() => setShowFilterOptions(!showFilterOptions)}
+            >
+              <Icon name="filter" size={24} color="#FFF" />
+            </TouchableOpacity>
+          </View>
+          {showFilterOptions && (
+            <View style={styles.filterOptionsContainer}>
+              <TouchableOpacity onPress={() => applyFilter("Rainy Day")}>
+                <Text style={styles.filterOption}>Rainy Day</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => applyFilter("Christmas")}>
+                <Text style={styles.filterOption}>Christmas</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => applyFilter("Feel-Good")}>
+                <Text style={styles.filterOption}>Feel-Good</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => applyFilter("Thriller")}>
+                <Text style={styles.filterOption}>Thriller</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => applyFilter("Romantic")}>
+                <Text style={styles.filterOption}>Romantic</Text>
+              </TouchableOpacity>
+            </View>
+          )}
           <Carousel
-            data={trendingMovies}
+            data={filteredMovies.length > 0 ? filteredMovies : trendingMovies} // Use filtered movies if available
             renderItem={renderMovieItem}
             sliderWidth={carouselWidth}
             itemWidth={movieItemWidth}
@@ -289,7 +414,11 @@ const MovieHomeScreen = ({ navigation }) => {
             onSnapToItem={(index) => setActiveDotIndex(index)}
           />
           <Pagination
-            dotsLength={trendingMovies.length}
+            dotsLength={
+              filteredMovies.length > 0
+                ? filteredMovies.length
+                : trendingMovies.length
+            }
             activeDotIndex={activeDotIndex}
             containerStyle={styles.paginationContainer}
             dotStyle={styles.paginationDot}
@@ -311,16 +440,16 @@ const MovieHomeScreen = ({ navigation }) => {
       </ScrollView>
 
       <View style={styles.bottomNavBar}>
-        <TouchableOpacity onPress={() => navigation.navigate('MoviesHome')}>
+        <TouchableOpacity onPress={() => navigation.navigate("MoviesHome")}>
           <Icon name="home" size={screenWidth * 0.06} color="#FFF" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('MovieSearch')}>
+        <TouchableOpacity onPress={() => navigation.navigate("MovieSearch")}>
           <Icon name="search" size={screenWidth * 0.06} color="#FFF" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('MainScreen')}>
+        <TouchableOpacity onPress={() => navigation.navigate("MainScreen")}>
           <Icon name="gamepad" size={screenWidth * 0.06} color="#FFF" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('MovieFavorite')}>
+        <TouchableOpacity onPress={() => navigation.navigate("MovieFavorite")}>
           <Icon name="heart" size={screenWidth * 0.06} color="#FFF" />
         </TouchableOpacity>
       </View>
@@ -331,49 +460,49 @@ const MovieHomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: "#000",
     paddingTop: screenHeight * 0.03,
   },
   content: {
     flex: 1,
   },
   navBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: '#000',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "#000",
     paddingHorizontal: screenWidth * 0.05,
     paddingTop: screenHeight * 0.03,
     paddingBottom: screenHeight * 0.015,
   },
   bottomNavBar: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    backgroundColor: '#000',
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    backgroundColor: "#000",
     paddingVertical: screenHeight * 0.015,
   },
   sectionContainer: {
     paddingVertical: screenHeight * 0.02,
     paddingHorizontal: screenWidth * 0.05,
     borderBottomWidth: 1,
-    borderBottomColor: '#333',
+    borderBottomColor: "#333",
     marginBottom: screenHeight * 0.03,
   },
   sectionTitle: {
     fontSize: screenWidth * 0.06,
-    fontWeight: 'bold',
-    color: '#FFF',
+    fontWeight: "bold",
+    color: "#FFF",
     marginBottom: screenHeight * 0.01,
   },
   movieItem: {
     marginRight: screenWidth * 0.02,
     width: movieItemWidth,
-    alignItems: 'center',
+    alignItems: "center",
   },
   moviePoster: {
     width: movieItemWidth,
@@ -381,19 +510,19 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   movieTitle: {
-    color: '#FFF',
+    color: "#FFF",
     marginTop: screenHeight * 0.01,
     fontSize: screenWidth * 0.04,
-    textAlign: 'center',
+    textAlign: "center",
   },
   topRatedItem: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: screenHeight * 0.02,
-    alignItems: 'center',
+    alignItems: "center",
   },
   topRatedPoster: {
     width: movieItemWidth * 0.8,
-    height: (movieItemWidth * 0.8) * 1.5,
+    height: movieItemWidth * 0.8 * 1.5,
     borderRadius: 5,
   },
   topRatedInfo: {
@@ -401,22 +530,22 @@ const styles = StyleSheet.create({
     marginLeft: screenWidth * 0.02,
   },
   topRatedTitle: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: screenWidth * 0.05,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   topRatedDescription: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: screenWidth * 0.04,
     marginTop: screenHeight * 0.01,
   },
   ratingContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: screenHeight * 0.01,
   },
   rating: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: screenWidth * 0.04,
     marginLeft: screenWidth * 0.01,
   },
@@ -428,15 +557,41 @@ const styles = StyleSheet.create({
     height: screenWidth * 0.02,
     borderRadius: screenWidth * 0.01,
     marginHorizontal: screenWidth * 0.015,
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
   },
   paginationInactiveDot: {
     // Style for inactive dots
   },
   title: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: screenWidth * 0.06,
-    fontWeight: 'bold',
+    fontWeight: "bold",
+  },
+  filterOptionsContainer: {
+    backgroundColor: "#333",
+    padding: 10,
+    marginTop: 10,
+    borderRadius: 5,
+  },
+  headerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  filterOptionsContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginTop: 10,
+  },
+  filterOption: {
+    backgroundColor: "#333",
+    color: "#FFF",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    marginHorizontal: 5,
+    marginBottom: 10,
+    borderRadius: 5,
+    fontSize: 14,
   },
 });
 

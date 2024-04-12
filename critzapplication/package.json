@@ -33,6 +33,7 @@
     "firebaseui": "^6.1.0",
     "he": "^1.2.0",
     "mongoose": "^8.1.1",
+    "openai": "^4.33.0",
     "react": "18.2.0",
     "react-native": "0.73.2",
     "react-native-paper": "^5.12.3",
